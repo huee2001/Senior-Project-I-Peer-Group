@@ -8,7 +8,8 @@ This repository contains individual Senior Project I work for our peer-review gr
 ## Members
 
 - Raed Jaber
-  .....
+- Ibsan Hossain
+- Mohamed Kamagate
 
 ## Repository Structure
 
