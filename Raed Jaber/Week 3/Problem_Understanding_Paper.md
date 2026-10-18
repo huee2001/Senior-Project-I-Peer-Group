@@ -4,7 +4,9 @@ CSC 59866
 Kurt Brown
 
 A08: Discovery Across Independent Research Data Repositories
+
 What problem are you investigating?
+
 The problem I am investigating is how researchers can reliably discover datasets when the information about those datasets is stored across several independent repositories. A repository may contain research datasets from one organization or subject area, while another repository contains different datasets. A researcher who does not know which repository contains the information they need may want to search across all of them at the same time.
 The information used for this search is mainly metadata, which means information that describes a dataset rather than the dataset itself. Metadata can include the dataset's title, description, publisher, keywords, modification date, version, and location. The World Wide Web Consortium (W3C) created the Data Catalog Vocabulary (DCAT) as a standard way to describe datasets and data services. DCAT is intended to improve interoperability between catalogs and allows metadata from multiple catalogs to be consumed and aggregated. It also supports the idea of federated search across catalogs located at different sites. W3C
 Source: W3C Data Catalog Vocabulary (DCAT) Version 3
@@ -16,6 +18,7 @@ Source: W3C DCAT Version 3
 My project is therefore not about designing a new Internet search engine or storing large scientific datasets. The boundary of the problem is much smaller. I am investigating the tradeoff between availability and freshness of metadata when searching a small number of independent repositories.
 ________________________________________
 Who or what is affected by it?
+
 The main users affected are researchers who need to discover datasets without already knowing exactly where those datasets are stored. Organizations that publish and maintain research datasets are also affected because they want their data to remain discoverable by other researchers.
 The National Science Foundation's Integrated Data Systems and Services (IDSS) program shows that shared data infrastructure is an important area for scientific research. The program supports national-scale data and cyberinfrastructure systems and services intended to enable data-intensive and artificial intelligence-driven research and education across scientific disciplines. NSF - U.S. National Science Foundation
 Source: NSF Integrated Data Systems and Services (IDSS)
@@ -25,6 +28,7 @@ Using the earlier example, if Repository C becomes unavailable during the "NYC a
 The systems themselves are also affected. A direct-search service depends on the availability and response of several independent repositories. A centralized catalog has less dependence on every repository being available at search time, but it now has the responsibility of keeping its copied metadata synchronized.
 ________________________________________
 What evidence do you currently have that it is a real problem?
+
 There are several pieces of documented evidence supporting the broader problem, although I have not yet produced experimental evidence for my specific simulated failure.
 First, the NSF IDSS program establishes that shared research-data infrastructure is an active technical and research need. NSF states that the program supports development, scaling, and operation of national data and cyberinfrastructure systems and services. It also describes systems that may interact with or make use of other existing systems and services. This supports the importance of integrating and accessing research information across infrastructure rather than assuming all research data exists in a single location. NSF - U.S. National Science Foundation
 Source: NSF IDSS program
@@ -37,6 +41,7 @@ At this point, I have not yet measured missing or outdated results myself. That 
 My current assumptions are that a live search will lose results when a repository containing a matching dataset is unavailable, and that a central catalog can return stale information when its copy has not yet been refreshed after the original repository changes. These are reasonable hypotheses based on the architectures, but they will be treated as assumptions until I reproduce them in my experiment.
 ________________________________________
 What solutions already exist?
+
 The first existing approach is direct or federated search. Instead of maintaining one complete central copy, the search service contacts several catalogs when a user performs a query and combines the responses. DCAT supports this type of decentralized environment by providing a common vocabulary that makes federated queries across catalogs possible. W3C
 A major strength of this approach is freshness. If Repository C has just changed its metadata and is currently available, a live request can receive the new information without waiting for a central catalog to synchronize.
 Its limitation is availability. If Repository C cannot be contacted when the search occurs, its datasets may not appear in the combined result. The search system is therefore affected by the current condition of each participating repository.
@@ -54,6 +59,7 @@ The comparison for my project can therefore be summarized as follows:
 Neither approach is automatically better. The useful solution may depend on how frequently repository metadata changes, how often repositories become unavailable, and how much staleness users can tolerate.
 ________________________________________
 What is the most important thing you still do not know?
+
 The most important unanswered question is:
 How current does a central catalog need to be for researchers to reliably receive useful search results?
 This question affects the design because refreshing constantly would reduce the amount of outdated metadata, but it would also require more frequent communication with the repositories. Refreshing less often would reduce synchronization activity but increase the period during which copied information could become stale.
@@ -63,6 +69,7 @@ The main measurements will be the number of missing results and the number of ou
 If even moderately delayed synchronization produces many incorrect results, the design would need frequent updates or live verification. If copied metadata remains useful for longer periods and handles outages better, a central catalog may offer a useful reliability advantage.
 ________________________________________
 My Individual Scope
+
 My project will intentionally use a small scope so that it can be completed and evaluated by one student.
 I will create three mock research-data repositories containing a small number of dataset descriptions. I will use one consistent metadata format based on fields relevant to DCAT, such as dataset identifier, title, description, keywords, source, version, and modification date. I will not store or process large real scientific datasets because my problem is about dataset discovery and metadata, not scientific data analysis.
 I will compare two approaches: a direct search that requests metadata from each repository and a central catalog that stores previously collected metadata. I will study two controlled failures: one repository becoming unavailable and one repository changing its metadata before the central catalog has refreshed.
