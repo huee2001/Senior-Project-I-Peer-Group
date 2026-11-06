@@ -1,1 +1,0 @@
-#Apply it to your project.# Identify one caller, one program that responds, one piece of saved information, and one situation in which a response might not arrive. If your project is a simulator, identify the simulated participants and the messages the simulation represents. You are ready to continue when you can explain these four things without relying on product names.
