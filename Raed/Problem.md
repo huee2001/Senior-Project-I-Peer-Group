@@ -1,264 +1,246 @@
-A08: Discovery Across Independent Research Data Repositories
-
+A08: Plain-Language Search Across Disaster Data Archives
 Raed Jaber
 CSC 59866 – Senior Project I
 Professor Kurt Brown
-October 2026
-
----
-
+NSF Project 10 – Award 2609535
 1. What problem are you investigating?
+The problem I am investigating is how to make disaster-related research information easier to find when it is stored across different independent archives.
 
-The problem I am investigating is how to make disaster-related research data easier to discover when the information is stored across separate and independent repositories.
-
-I narrowed this problem using National Science Foundation (NSF) Award #2609535, “Category III: AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence.” The award describes planning for DISCAT 2.0, a larger disaster-research system that would connect information from existing disaster archives through a federated data layer.
+This project is based on NSF Project 10 from the course PDF, “Category III: AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence.” The NSF project plans DISCAT 2.0, a next-generation disaster data infrastructure that connects existing disaster archives. The project also says that users should be able to ask questions in plain language and receive useful information from those connected sources.
 
 https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
-For my project, I am not trying to build the entire DISCAT 2.0 system. Instead, I am focusing on a smaller product that addresses one part of this problem.
+The full NSF project is much larger than what I can build as one student. It includes artificial intelligence agents, knowledge graphs, security, governance, user roles, and a federated data layer.
 
-My goal is to build a federated disaster-data discovery application. The application would allow a user to search multiple independent disaster-data sources from one interface instead of searching every repository separately.
+For my individual project, I am focusing on one smaller product inside that larger idea.
 
-For example, the product could connect three simplified data sources:
+My goal is to build a plain-language disaster archive search application.
 
-- Archive A: infrastructure and building damage information
-- Archive B: evacuation and social-science information
-- Archive C: emergency-response information
+A user would type a normal question into a search box, such as:
+What information is available about Hurricane Sandy?
 
-A user could search for something such as “Hurricane Sandy evacuation.” The application would search the connected sources and combine the matching information into one results page.
+The application would search across a small number of separate disaster-data sources and return the relevant results in one place.
 
-Each result would clearly identify which source it came from.
+The main problem is that disaster information may be stored in different repositories, each with its own data and organization. A user may need to search several different systems separately to find related information.
 
-The main difficulty I want the product to handle is when one of those independent sources is unavailable or does not respond correctly.
+My product would provide one search interface that sends the user’s question to the connected sources, gathers the matching information, and presents the results together.
 
-For example, Archive A and Archive C may be working normally, while Archive B is unavailable. I do not want the entire search application to fail because one source cannot be reached.
+For example, I may use three simplified disaster-data sources. One source could contain disaster-event information, another could contain research or report metadata, and another could contain response-related information.
 
-Instead, the application should still return useful results from the available sources and clearly tell the user that Archive B is unavailable.
+Each result would clearly show which source it came from.
 
-If previously retrieved information from Archive B is available, another possible feature is to display that cached information while clearly identifying it as previously stored information instead of a current live result.
+The application should also handle a source becoming unavailable. If one connected source cannot respond, the entire product should not fail. The application should still show the information it can retrieve from the other sources and clearly tell the user which source was unavailable.
 
-The World Wide Web Consortium (W3C) Data Catalog Vocabulary, or DCAT, is relevant to this problem because it provides a standard way to describe datasets and data services across different catalogs.
-
-https://www.w3.org/TR/vocab-dcat-3/
-
-My project is therefore not about building a national disaster database or replacing existing repositories. It is about building a smaller discovery product that can work across several independent sources and continue to provide useful information when one source has a problem.
-
----
-
+This keeps the project connected to A08 because A08 focuses on discovery across independent research-data repositories. My product is a specific disaster-data version of that problem.
 2. Who or what is affected by it?
+The main users affected by this problem are disaster researchers, emergency managers, and other people who need to find information from disaster archives.
 
-The main users affected by this problem are researchers and other people who need to find disaster-related information across multiple sources.
-
-A researcher studying a hurricane, for example, may need infrastructure damage information, evacuation information, and emergency-response information. Those types of information may not all be stored in the same repository.
-
-If users have to search each repository separately, discovering information becomes more difficult and time-consuming.
-
-The NSF DISCAT 2.0 project is attempting to address a much larger version of this problem by connecting existing disaster archives and making their information easier to use for research and decision-making.
+The NSF Project 10 abstract specifically mentions researchers, emergency managers, and policy stakeholders as users involved in the planned DISCAT 2.0 system.
 
 https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
-The individual repositories are also affected because they remain independent systems. A discovery application cannot assume that every repository will always be available at the same time.
+A disaster researcher may need information that is stored in more than one archive. For example, one repository may contain information about a disaster event, while another may contain reports or research related to that same event.
 
-For example, imagine that a user searches for Hurricane Sandy.
+If those repositories are separate, the user may have to visit different systems and perform several different searches.
 
-Archive A may return infrastructure damage information.
+That creates a discovery problem.
 
-Archive B may normally contain evacuation information.
+The user has to know which repositories exist, where to search, and how each repository organizes its information.
 
-Archive C may contain emergency-response information.
+A plain-language search tool could reduce that difficulty by giving the user one place to ask a question.
 
-If Archive B is unavailable, the application should still continue working.
+Instead of manually searching several different archives, the user could type a normal question into one interface and receive combined results.
 
-My product would continue showing the results from Archives A and C while warning the user that Archive B could not be reached.
+The independent repositories are also part of the problem because they may not all behave the same way.
 
-This is important because users should know when their search results may be incomplete.
+One source may be available while another is temporarily unavailable. One source may also describe its datasets or records differently from another source.
 
-The product is therefore focused on making information from separate sources easier to discover while also keeping the search useful when one source is unavailable.
+My product would try to make the user experience more consistent by presenting the results in one format and showing the source of each result.
 
----
+If one source is unavailable, the application would show that status instead of failing silently.
 
+The main effect on the user is therefore not only search convenience. It is also clarity.
+
+The user should be able to see:
+- what information was found,
+- which source provided it,
+- and whether one of the connected sources could not be reached.
 3. What evidence do you currently have that it is a real problem?
+The strongest evidence for the broader problem comes from NSF Project 10.
 
-The main evidence for the larger problem comes from NSF Award #2609535.
+The NSF abstract explains that the project will design a national artificial-intelligence-enabled hub that connects existing disaster archives and turns them into a more active resource for science and decision-making.
 
-The NSF project describes DISCAT 2.0 as a next-generation disaster-data infrastructure that would build on existing disaster archives. The proposed system includes a federated data layer and is designed to make disaster information easier to access and combine.
+It also specifically says that the planned system should make it easier to ask questions in plain language and should use a federated data layer.
 
 https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
-This supports the idea that disaster-related information is distributed across existing sources and that connecting those sources is an important technical problem.
+This supports the larger problem that disaster-related information exists across separate archives and that there is value in making that information easier to discover.
 
-However, the NSF award does not say that my exact three-source product already exists or that my exact example is a documented failure.
+The NSF project also shows that the problem is important enough to support a larger research effort around disaster data infrastructure.
 
-My three-source design is a smaller version of the larger problem so that the project is manageable for one student.
+However, the NSF award does not prove that my exact small product already exists or that my exact search interface is the correct solution.
 
-A second source is the W3C Data Catalog Vocabulary (DCAT) Version 3 specification.
+My product is a smaller implementation direction that comes from one specific part of the NSF project.
 
-DCAT was developed to improve interoperability between data catalogs. It provides a common model for describing datasets and data services and supports discovery across different catalogs.
+A second useful source is the World Wide Web Consortium (W3C) Data Catalog Vocabulary (DCAT) Version 3.
+
+DCAT provides a standard vocabulary for describing datasets and data services. Its purpose is to improve interoperability and discovery across data catalogs.
 
 https://www.w3.org/TR/vocab-dcat-3/
 
-Another related approach is the Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH).
+This is relevant to my product because information from different sources needs to be represented in a consistent way before it can be displayed together in one search interface.
 
-OAI-PMH allows one system to collect metadata from independent repositories.
+For example, my application may use a common structure with fields such as:
+- title,
+- description,
+- source,
+- disaster type,
+- date,
+- and access link.
+A third related source is the Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH).
+
+OAI-PMH is an established protocol that allows metadata to be collected from repositories.
 
 https://www.openarchives.org/pmh/
 
-This is relevant to the cached-information feature of my product. Information that has already been collected from a repository could potentially remain available even when the original repository cannot currently be reached.
+This shows another existing approach for working with information that is distributed across independent repositories.
 
-These sources show that distributed repositories, federated discovery, and metadata sharing are real technical areas.
+These sources support the general problem of data discovery across multiple repositories.
 
-What I still need to determine is how I should combine these ideas into a small and usable product.
-
----
-
+What they do not prove is exactly how my small application should be designed. That is what I still need to work out through the design process for the project.
 4. What solutions already exist?
+There are already several approaches related to this problem.
 
-There are already several approaches related to this problem. My goal is not to claim that I invented federated search, caching, or failure handling.
-
+My project is not claiming that searching multiple repositories is a completely new idea. Instead, I am building a small product using ideas that already exist.
 Federated Search
-
 One approach is federated search.
 
-In a federated search system, the sources remain independent instead of being combined into one large database. A search system sends requests to multiple sources and then combines their responses.
+In a federated search system, the data sources remain separate. The search system sends a request to several sources and combines the responses for the user.
 
-This fits my product because my three disaster-data sources can remain separate while the user interacts with only one search interface.
+This fits my project because I do not need to copy every disaster archive into one large database.
 
-The advantage is that the user does not need to manually search every repository.
+The user can search from one interface while the connected sources remain independent.
 
-The limitation is that the application depends on several independent sources. If one source is unavailable, the application needs to decide how to present the results that are still available.
+The strength of federated search is that it gives the user one place to search.
 
-Common Dataset Descriptions
+The limitation is that the application depends on multiple independent systems. If one source is unavailable, the application still needs to decide how to present the results from the sources that are available.
+Common Metadata Structure
+Another approach is to use a common structure for describing records from different sources.
 
-Another existing approach is DCAT.
-
-DCAT provides a standard vocabulary for describing datasets and data services.
+DCAT is relevant because it provides a standard vocabulary for describing datasets and data services.
 
 https://www.w3.org/TR/vocab-dcat-3/
 
-For my product, a simplified common metadata structure could include fields such as:
+For my project, I may not implement every part of DCAT, but I can use the same idea of creating a common structure for all search results.
 
-- dataset title
-- description
-- source
-- category
-- disaster name
-- date
-- last updated time
-
-Using a consistent structure would make it easier for the application to display results from different sources together.
-
-Cached or Previously Collected Information
-
-Another approach is storing previously retrieved information.
-
-OAI-PMH is an example of an established method for harvesting metadata from repositories.
+For example:
+Title
+Description
+Source
+Disaster Type
+Date
+Link
+This would make it easier to display information from different sources in one results page.
+Metadata Harvesting
+OAI-PMH provides another approach where one service collects metadata from repositories.
 
 https://www.openarchives.org/pmh/
 
-A similar idea could be useful in my application.
+Instead of asking every repository for information at the exact moment of each search, a system can collect metadata and make it available through another service.
 
-If Archive B was available earlier and the application stored some of its dataset information, the application could still display that information when B becomes unavailable.
+The advantage is that search can be faster and less dependent on every source being online at the same moment.
 
-The disadvantage is that previously stored information may not be current.
-
-Because of this, cached results should be clearly labeled so that the user knows they are not live results.
-
+The limitation is that previously collected information may become outdated.
 Comparison
+Approach	Strength	Limitation
+Federated search	Searches independent sources from one interface	Depends on the connected sources being available
+Common metadata structure	Makes information from different sources easier to combine	Different repositories may use different formats
+Metadata harvesting	Can make collected information easier to search	Stored information may become outdated
 
-Approach| Strength| Limitation
-Federated search| Searches several independent sources from one place| One source may become unavailable
-Common metadata structure| Makes results from different sources easier to combine| Sources may describe information differently
-Partial results| Application can still work when one source fails| User may receive incomplete information
-Cached information| Can preserve information from an unavailable source| Information may be outdated
 
-These approaches give me possible components for the product, but I still need to decide how they should work together in a simple interface.
+For my product, the main direction will be a small federated search interface with a common result format.
 
----
-
+If one source is unavailable, the product should still display the information returned by the other connected sources.
 5. What is the most important thing you still do not know?
+The most important thing I still do not know is:
 
-The main thing I still need to determine is:
+What is the best way to turn a plain-language disaster question into useful combined results from several independent disaster-data sources?
 
-What is the best way for my product to continue giving useful and understandable search results when one connected disaster-data source is unavailable?
+The NSF project says that DISCAT 2.0 should make it easier for users to ask questions in plain language.
 
-I already know that techniques such as federated search, partial results, and caching exist.
+https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
-The unknown for my project is how I should combine those ideas into a product that makes the status of the information clear to the user.
+For my smaller project, I still need to decide how much natural-language processing is necessary.
 
-For example, if Archive B cannot be reached, the application could still display results from Archives A and C.
+For example, if a user types:
+What information is available about Hurricane Sandy?
 
-The interface could show:
+the application needs to identify the important search terms and use them to search the connected sources.
 
-- Archive A – Available
-- Archive B – Currently unavailable
-- Archive C – Available
+A simple first version may identify terms such as:
+- Hurricane Sandy
+- hurricane
+- location
+- date
+- disaster type
+I still need to decide how simple or advanced this part of the system should be.
 
-The results would also show their original source.
+I also need to decide exactly which fields from different sources should be converted into my common result format.
 
-If cached Archive B information exists, the product could display it separately with a label such as:
+Another design question is how the interface should display results when one source is unavailable.
 
-Cached result – last retrieved October 20
+The product should make it clear that some information may be missing, rather than making the user think that the returned results represent every connected source.
 
-This is important because I do not want users to confuse older cached information with current live information.
+These design decisions will affect how useful and understandable the final product is.
+6. Your Individual Scope
+My individual project will be a small plain-language disaster archive search web application.
 
-The goal is for the application to continue functioning when one source has a problem while also being clear about what information may be missing or outdated.
+The product will be inspired by NSF Project 10 and its goal of making it easier to ask questions across existing disaster archives.
 
----
+My project will not attempt to build the full DISCAT 2.0 system.
 
-6. My Individual Scope
+The planned product will include:
+- one web-based search interface,
+- plain-language user questions,
+- two or three simplified disaster-data sources,
+- a common format for search results,
+- combined results from the connected sources,
+- source labels for every result,
+- and a clear status when one source is unavailable.
+A user will enter a question such as:
+What information is available about Hurricane Sandy?
 
-My individual project will be a small federated disaster-data discovery web application.
+The application will process the question, search the connected sources, and display the matching results on one page.
 
-The application will have one main search interface.
+The product will show the source of each result so that the user knows where the information came from.
 
-For the initial version, I plan to work with three simplified disaster-data sources:
+If one source cannot be reached, the application should continue displaying results from the other available sources and show that the unavailable source could not be searched.
 
-1. infrastructure and damage data
-2. evacuation or social-science data
-3. emergency-response data
+The project will use small or simplified data sources so that it remains manageable for one student.
 
-The sources may use small sample datasets or simplified repository services so that the project remains manageable for one student.
+Possible implementation tools include:
+- Python or JavaScript for the backend,
+- a simple web frontend,
+- JSON or API-based data sources,
+- and a small common metadata structure for the search results.
+I am excluding the larger parts of DISCAT 2.0, including:
+- multiple AI agents,
+- full knowledge graphs,
+- national-scale infrastructure,
+- advanced security and governance,
+- large-scale disaster prediction,
+- and a complete production-level federated data platform.
+Those features are outside the scope of my individual project.
 
-A user will enter a search term, such as a hurricane name or disaster topic.
+The final product I am trying to build is therefore:
 
-The application will search across the connected sources and display the matching information together on one results page.
+A small web application that lets a user ask a plain-language disaster-related question and receive combined, source-labeled results from several independent disaster-data sources.
 
-Each result will show which repository it came from.
-
-The product will also include source-status information.
-
-If one source cannot be reached, the entire application should not stop working. The application should continue displaying information from the available sources while clearly showing which source is unavailable.
-
-If the project remains manageable, I would also like to include a cached-information feature.
-
-Previously retrieved information from an unavailable source could still appear, but it would be clearly labeled as cached and include information about when it was last retrieved.
-
-The main product features would be:
-
-- one search interface
-- three independent disaster-data sources
-- combined search results
-- source labels
-- repository availability/status information
-- partial results when one source is unavailable
-- possibly clearly labeled cached results
-
-I am not building the complete DISCAT 2.0 system.
-
-I am also not building artificial intelligence agents, a national disaster database, a knowledge graph, disaster prediction software, or a complete production-scale distributed architecture.
-
-Those features are outside the scope of one student project.
-
-The purpose of my project is to build a smaller working product that demonstrates how disaster-related information from independent repositories can be discovered through one interface while still providing useful and transparent results when one source is unavailable.
-
-This keeps the project connected to A08 while giving me a clear product that I can continue designing during Senior Project I and implement as a working system.
-
----
-
+This keeps the project specific, manageable, connected to A08, and directly based on one capability described in NSF Project 10.
 References
-
 National Science Foundation.
-Award Abstract #2609535: Category III: AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence.
+Category III: AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence.
+NSF Award 2609535.
 https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
 World Wide Web Consortium (W3C).
