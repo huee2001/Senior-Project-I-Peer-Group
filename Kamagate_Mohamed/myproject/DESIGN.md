@@ -80,8 +80,9 @@ This information might also be hard to interpret due to the jargon, technical or
 
 **Current workflow:** A user queries a adadptive knowledge broker. The knowledge broker breaks down the query into its semantic value tokens then delegates the tasks to specialized domain agent(s). The domain agent(s) have specialized knowledge on certain domains(i.e social science, physical science, policies etc.) They figure out what sources should be queiried and let functional agents do the physical work of actually calling the API's and checking the databases. These open Api's and databases are stored in the federate data layer. Lastly broke prepares the response back to the user.
 ![Visual.](assets/FourTierAgentic.png)
+## Concrete Example
+An emergency managa wants to know which neighborhoods were slowlest to recover and most impacted by past storms. The answer is spread across different archives. Structural damage data sits in an engineering collection, the  amount of aid received sits in a social-science collection. Each archives uses different terms and formats. Realistically she wouldn't be able to investigate all the possible sources, so she only relies on several sources. 
 
- 
 **Evidence:**   
 
 University of delaware DRC hosts oldest archive of ontologist related works. The information may complex and less suited for non-researchers who are looking for accurate and clear guidance.
