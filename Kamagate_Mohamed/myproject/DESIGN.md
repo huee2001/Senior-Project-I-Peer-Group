@@ -4,7 +4,7 @@
 with your own explanations as sections become due. Create assets and evidence
 directories for files you include. Remove instructional comments at final submission. -->
 ## Problem and scope
-Disasters can take place any time. It's important to be prepared for, properly respond to, and recover from said disasters. The problem is disaster information is spread across many repositories , fragmented known as silos. These data silos often compliment each other or further elaborate on each other but alone they aren't as useful. The emergency responders, disaster scientist, and the general public affected by these disasters may not have the time to consolidate all these fragmented information and the general public may not have the means to these resources locked behind well funded agencies, large cities,  elite research universities or understand the jargon. The aim of this project is to democratize technology by providing a plain language query interface with real-time accurate information
+Disasters can take place any time. It's important to be prepared for, properly respond to, and recover from said disasters. The problem is disaster information is spread across many repositories , fragmented known as silos. These data silos often compliment each other or further elaborate on each other but alone they aren't as useful. The emergency responders, disaster scientist, and the general public affected by these disasters may not have the time to consolidate all these fragmented information. The general public especially may not have the means to these resources locked behind universities(i.e requiring a scholarly account/email.) or understand the jargon. The aim of this project is to democratize technology by providing a plain language query interface with real-time accurate information
 
 
 For this project, my scope will be narrowed to disasters that primarily affect New York (i.e Floods, hurricane, heat waves).
@@ -33,6 +33,7 @@ peer-review report, review link, or review transcript is required. -->
 
 <!-- Write 100â€“150 words: changes, learning, main open issue, feedback addressed,
 and next step. Link evidence when available. Update at each Friday deliverable. -->
+Initial start to the assignment. Developed an unuderstanding of how the vast amount of ontology knowledge may affect groups of people in terms of searchability, comprehension, and time management. Also learnt about the proposed solution given by the docuuument. Deals with four tier agentic architecture. The most newest update is cleaning up redundanciies for the week 1 assignment, remodeling the workflow so it doesn't include the proposed solution and demonstrates what is commonly happening instead. 
 
 ## Contents
 
@@ -48,16 +49,7 @@ and next step. Link evidence when available. Update at each Friday deliverable. 
 - [10 Testing and verification](#10-testing-and-verification)
 - [11 Operation maintenance and future work](#11-operation-maintenance-and-future-work)
 - [12 Revision history and references](#12-revision-history-and-references)
-
-## 1 Problem research and scope
-
-<!-- Assignment 1. Describe a person, task, difficulty, and consequence using
-a concrete scenario. Label assumptions. Distinguish a larger research project's
-aims from your own contribution where relevant. -->
-
-**Problem and affected people:** Disaster related info is scattered across many archives, which makes it harder to have complete understanding of the topic because some works complement each other or further elaborates on it, and many people affected may not have the time to consolidate it all.
-These archives are needed for decision making, long term or quick, by common people affected by these disasters, disaster science researchers who study these events and write ontologies about them, and first responders or emergency managers who act based on this info
-This information might also be hard to interpret due to the jargon, technical or software skills needed to extract the info, or lack of general access to these things.
+## Stakeholders
 
 *Potential Stakeholders*
 * Under-resourced communities
@@ -65,10 +57,10 @@ This information might also be hard to interpret due to the jargon, technical or
 * Emergency Managers/First responders
 
 (1)*General Public/Victims to disasters* “broaden access for under-resourced communities,” 
-* Communities who are under-resourced include people in rural areas where much analysis arent done in there region, making GIS maps useless for them and not much documentation they can go off on. They can query the AI agents, asking for things like "What federal grants are available for repairing our specific type of bridge damage, and what documents do we need?" where the AI agent can fetch fema documents and make it easier to understand and interpret by the user.
-
-* Low-income communities in general are most affected by these disasters[^1].. They’re located in flood prone zones, bad urban infrastructure, and are often left out of academic loop when new works are published. Since traditional disaster data is hidden behind paywalls or especially  locked behind complex academic jargon, a plain language query ai engineering hub such as this project provides accurate, and clear guidance on what to do and what to expect. LLMs can be used, but they fall victim to halluncinations and unreliable sources. This project utilizes a federate data layer that enables source independence, allowing responses to be tracked to their original source proving to be accurate. 
-[^1]:  An example of this https://nysclimateimpacts.org/explore-the-assessment/case-studies/hurricane-ida-vulnerabilities-in-new-york-city/#:~:text=Left%2C%20the%20basement%20living%20space%20in%20Brooklyn%2C,federal%20assistance%20because%20of%20their%20immigration%20status
+* Communities who are under-resourced include people in rural areas where much analysis arent done in there region, making GIS[^1] maps useless for them and not much documentation they can go off on. They can query the AI agents, asking for things like "What federal grants are available for repairing our specific type of bridge damage, and what documents do we need?" where the AI agent can fetch fema documents and make it easier to understand and interpret by the user.
+[^1]: For context, GIS maps provide visual representations of spatial data. helps user understand geographic patterns and relationships. Urban areas tend to have advantage over rural ones. https://www.maplibrary.org/11436/6-scaling-challenges-in-urban-vs-rural-mapping/ 
+* Low-income communities in general are most affected by these disasters[^2].. They’re located in flood prone zones, bad urban infrastructure, and are often left out of academic loop when new works are published. Since traditional disaster data is hidden behind paywalls or especially  locked behind complex academic jargon, a plain language query ai engineering hub such as this project provides accurate, and clear guidance on what to do and what to expect. LLMs can be used, but they fall victim to halluncinations and unreliable sources. This project utilizes a federate data layer that enables source independence, allowing responses to be tracked to their original source proving to be accurate. 
+[^2]:  An example of this https://nysclimateimpacts.org/explore-the-assessment/case-studies/hurricane-ida-vulnerabilities-in-new-york-city/#:~:text=Left%2C%20the%20basement%20living%20space%20in%20Brooklyn%2C,federal%20assistance%20because%20of%20their%20immigration%20status
 
 (2) *Disaster science researchers*  “support training of the next generation of disaster researchers and practitioners”
 
@@ -78,10 +70,13 @@ This information might also be hard to interpret due to the jargon, technical or
 (3) Emergency Managers/First responders
 * Must be able to make quick, accurate descions. Instead of scavenging multiple sources too get the best, accurate, real time information, this platform helps them save time and potentially lives. In addition, sources these stakeholders look at (such as  NYC open data, FEMA, etc.) would be included in the federate data layer. 
 
-**Current workflow:** A user queries a adadptive knowledge broker. The knowledge broker breaks down the query into its semantic value tokens then delegates the tasks to specialized domain agent(s). The domain agent(s) have specialized knowledge on certain domains(i.e social science, physical science, policies etc.) They figure out what sources should be queiried and let functional agents do the physical work of actually calling the API's and checking the databases. These open Api's and databases are stored in the federate data layer. Lastly broke prepares the response back to the user.
+**Current workflow:** 
+* User wants to do research on niche disaster topic
+* Uses search engine first. Sources provided may be too vague or loosely connected to user's query
+* Uses an LLM as an alternative, which falls victim to halluncinations. User may be skeptical of the results.
 ![Visual.](assets/FourTierAgentic.png)
 ## Concrete Example
-An emergency managa wants to know which neighborhoods were slowlest to recover and most impacted by past storms. The answer is spread across different archives. Structural damage data sits in an engineering collection, the  amount of aid received sits in a social-science collection. Each archives uses different terms and formats. Realistically she wouldn't be able to investigate all the possible sources, so she only relies on several sources. 
+An emergency manager wants to know which neighborhoods were slowlest to recover and most impacted by past storms. The answer is spread across different archives. Structural damage data sits in an engineering collection, the  amount of aid received sits in a social-science collection. Each archives uses different terms and formats. Realistically she wouldn't be able to investigate all the possible sources, so she only relies on several sources. 
 
 **Evidence:**   
 
