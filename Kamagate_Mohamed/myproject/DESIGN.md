@@ -21,8 +21,8 @@ For this project, my scope will be narrowed to disasters that primarily affect N
 **Current assignment:** 1
 **Friday commit deadline:**  November 6 2026, at 11:59 p.m. New York time  
 **Monday presentation:**  November 9 2026, at 6:30 p.m. New York time  
-**Last updated:** 11/4  
-**Document status:** Proposed, revised, or ready for review
+**Last updated:** 11/10 
+**Document status:** Proposed
 
 <!-- Commit and push by Friday. Supply the exact commit identifier through the
 course submission channel. Every Monday, present your own work and orally review
@@ -113,7 +113,8 @@ Complete design and test references during Assignments 2 and 3. -->
 | Q1 | Measure, unit, target, workload | Measurement procedure | Mark as target until measured |
 
 **Inputs and outputs:** Give an ordinary example and an unsuccessful example.
-
+*Ordinary example*: Takes in user query as input, returns response to query as output
+*Unsuuuccessful example*: Takes in query as input,  returns in accurate response or failed to respond in time, 
 **Assumptions:** Conditions you rely on and how to check them.
 
 **Constraints:** Limits on time, tools, data, and resources.
@@ -122,6 +123,9 @@ Complete design and test references during Assignments 2 and 3. -->
 
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
 approaches under the same requirements, including a simple baseline. -->
+*Solution 1: four tier agentic architectuuure* 
+A user queries a adadptive knowledge broker. The knowledge broker breaks down the query into its semantic value tokens then delegates the tasks to specialized domain agent(s). The domain agent(s) have specialized knowledge on certain domains(i.e social science, physical science, policies etc.) They figure out what sources should be queiried and let functional agents do the physical work of actually calling the API's and checking the databases. These open Api's and databases are stored in the federate data layer. Lastly broke prepares the response back to the user.
+![Visual.](assets/FourTierAgentic.png)
 
 | Approach and source | Useful behavior | Limitation | Evidence or assumption |
 |---|---|---|---|
@@ -288,7 +292,7 @@ complete in Assignment 6. -->
 
 | Revision date | Change to my design | Reason and evidence |
 |---|---|---|
-| 11/4 | Initial plan | Just started |
+| 11/10 | Scoping out inputs and outputs | Based on the proposed solution, this is the expected workflow |
 
 | Open question | Why it matters | Next action |
 |---|---|---|
