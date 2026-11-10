@@ -108,7 +108,7 @@ Complete design and test references during Assignments 2 and 3. -->
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
-| F1 | User-visible capability | Concrete check | Add as design develops |
+| F1 | Federated data layer. The federated data layer must retrieve records from distributed legacy archives while tracking and displaying the exact source provenance and data confidence score.| Run a multi-archive data synthesis check and verify every factual claim in the final output includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
 | C1 | Rule that must remain true | A case that could violate it | Add as design develops |
 | Q1 | Measure, unit, target, workload | Measurement procedure | Mark as target until measured |
 
