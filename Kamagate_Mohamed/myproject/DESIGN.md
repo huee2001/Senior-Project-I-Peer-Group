@@ -117,11 +117,15 @@ Complete design and test references during Assignments 2 and 3. -->
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
-| F1 | Federated data layer. The federated data layer must retrieve records from distributed legacy archives while tracking and displaying the exact source provenance and data confidence score.| Run a multi-archive data synthesis check and verify every factual claim in the final output includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
+| F1 | The federated data layer must retrieve records from distributed  archives while tracking and displaying the exact source provenance.[^3]| Run a multi-archive data synthesis check and verify every factual claim in the final output[^4] includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
 |F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona | Add as design develops |
 | F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
-| C1 | Every factual claim in a response links to at least one source record in the federated data layer. No claim is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
-| Q1 | Measure, unit, target, workload | Measurement procedure | Mark as target until measured |
+| C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
+| Q1 | Response time of a multi-level query that involves different domains should not surpass 5 second threshold. | Input a multi domain query and measure the speed of the output. | Mark as target until measured |
+| Q2 | Accuracy of response | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. | Mark as target until measured |
+ 
+[^3]: Knowing the origin of the source, which domain agents retrieved it, and prehaps a confidence score on how trustworthy the source is. Source provennance is essential to eliminate halluncinations. Also helps with accountability. 
+[^4]: In general, RAG responses take in user queries, then augment it with its own prompt. Can enforce the LLM to pull in not only the text, but the source ID along with every response. 
 
 **Required test set needed before implementing test**
 1. Prepared queries. (i.e 1-2 queries that require accessing FEMA documentation, 1-2 queries pertaining to floods in small neighborhood/borough. in general place specific data. 1-2 cross domain queries such as one involving GIS skills, engineering, social science, etc. )
@@ -132,9 +136,13 @@ Complete design and test references during Assignments 2 and 3. -->
 3. Zero fabricated answers/halluncinations for out of scope query.
 
 **Inputs and outputs:** Give an ordinary example and an unsuccessful example.
-*Ordinary example*: Takes in user query as input, returns response to query as output
-*Unsuuuccessful example*: Takes in query as input,  returns in accurate response or failed to respond in time, 
+*Ordinary example*: Takes in user query as input, returns response to query as output. The response should have source provenance, and be tailored to the user's persona(may omit this part)
+*Unsuccessful example*: Takes in query as input,  returns an inaccurate response, no source provenance, or failed to respond in time
 **Assumptions:** Conditions you rely on and how to check them.
+
+*Assumption 1:* Public API's and open archives remain publically availiable. (e.g., NOAA weather telemetry and NYC Open Data catch-basin logs) Doesn't requrie authentication token(subject to change) or paywall to reach the HTTPS endpoints.
+
+*Assumption 2:* The schemas doesn't undergo major changes during the semester development window
 
 **Constraints:** Limits on time, tools, data, and resources.
 
