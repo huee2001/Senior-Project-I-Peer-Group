@@ -144,6 +144,10 @@ Complete design and test references during Assignments 2 and 3. -->
 
 *Assumption 2:* The schemas doesn't undergo major changes during the semester development window
 
+*Way to check assumption 1*: Short, simple python script involving the requests library. Send HTTP get requests to all important endpoints and ensure the response status is 200
+
+*Way to check assumption 2*: Can review API documentation to see if actively going through change, can look at unique URLS and see if there was a change (i.e /api/v2 /api/v3/ etc)
+
 **Constraints:** Limits on time, tools, data, and resources.
 
 ## 3 Alternatives and selected solution
