@@ -1,5 +1,6 @@
 # AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence
 
+
 <!-- Copy this file into your project directory as DESIGN.md. Replace prompts
 with your own explanations as sections become due. Create assets and evidence
 directories for files you include. Remove instructional comments at final submission. -->
@@ -51,10 +52,18 @@ Initial start to the assignment. Developed an unuderstanding of how the vast amo
 - [12 Revision history and references](#12-revision-history-and-references)
 ## Stakeholders
 
+
+
 *Potential Stakeholders*
 * Under-resourced communities
 * Disaster science researchers
 * Emergency Managers/First responders
+
+| Stakeholders | Level of impact | Reasoning| 
+|---|---| ---|
+| General Public/Victims to disasters | High | Disasters affect them directly. These communities may be overlooked. Lack of access to resources that apply to them.
+| Disaster science researchers | Medium-high | Actively resource subject matter pertaining to disasters. Requires different domain knowledge to fully understand
+| Emergency Managers/First responders | Medium | Has a team to spread out the work require. 
 
 (1)*General Public/Victims to disasters* “broaden access for under-resourced communities,” 
 * Communities who are under-resourced include people in rural areas where much analysis arent done in there region, making GIS[^1] maps useless for them and not much documentation they can go off on. They can query the AI agents, asking for things like "What federal grants are available for repairing our specific type of bridge damage, and what documents do we need?" where the AI agent can fetch fema documents and make it easier to understand and interpret by the user.
@@ -109,8 +118,18 @@ Complete design and test references during Assignments 2 and 3. -->
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
 | F1 | Federated data layer. The federated data layer must retrieve records from distributed legacy archives while tracking and displaying the exact source provenance and data confidence score.| Run a multi-archive data synthesis check and verify every factual claim in the final output includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
-| C1 | Rule that must remain true | A case that could violate it | Add as design develops |
+|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona | Add as design develops |
+| F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| C1 | Every factual claim in a response links to at least one source record in the federated data layer. No claim is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Measure, unit, target, workload | Measurement procedure | Mark as target until measured |
+
+**Required test set needed before implementing test**
+1. Prepared queries. (i.e 1-2 queries that require accessing FEMA documentation, 1-2 queries pertaining to floods in small neighborhood/borough. in general place specific data. 1-2 cross domain queries such as one involving GIS skills, engineering, social science, etc. )
+
+**Pass criteria (work in progress)**
+1. Correctly cited sources that can be verified
+2. Persona-matched responses seem aaccurate
+3. Zero fabricated answers/halluncinations for out of scope query.
 
 **Inputs and outputs:** Give an ordinary example and an unsuccessful example.
 *Ordinary example*: Takes in user query as input, returns response to query as output
