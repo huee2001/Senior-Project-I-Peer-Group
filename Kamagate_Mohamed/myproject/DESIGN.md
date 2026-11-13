@@ -118,11 +118,11 @@ Complete design and test references during Assignments 2 and 3. -->
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
 | F1 | The federated data layer must retrieve records from distributed  archives while tracking and displaying the exact source provenance.[^3]| Run a multi-archive data synthesis check and verify every factual claim in the final output[^4] includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
-|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona | Add as design develops |
+|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
 | F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
-| Q1 | Response time of a multi-level query that involves different domains should not surpass 5 second threshold. | Input a multi domain query and measure the speed of the output. | Mark as target until measured |
-| Q2 | Accuracy of response | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. | Mark as target until measured |
+| Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
+| Q2 | More than half, out of a sample size of 20 queries, should be met with an accurate response.  | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. |Proposed. Not yet measured, will update to measured when results from test has been received |
  
 [^3]: Knowing the origin of the source, which domain agents retrieved it, and prehaps a confidence score on how trustworthy the source is. Source provennance is essential to eliminate halluncinations. Also helps with accountability. 
 [^4]: In general, RAG responses take in user queries, then augment it with its own prompt. Can enforce the LLM to pull in not only the text, but the source ID along with every response. 
@@ -144,12 +144,12 @@ Complete design and test references during Assignments 2 and 3. -->
 
 *Assumption 2:* The schemas doesn't undergo major changes during the semester development window
 
-*Way to check assumption 1*: Short, simple python script involving the requests library. Send HTTP get requests to all important endpoints and ensure the response status is 200
+*Way to check assumption 1*: Short, simple python script involving the requests library. Send HTTP get requests to all important endpoints and ensure the response status is 200. Should also return actual text.
 
 *Way to check assumption 2*: Can review API documentation to see if actively going through change, can look at unique URLS and see if there was a change (i.e /api/v2 /api/v3/ etc)
 
 **Constraints:** Limits on time, tools, data, and resources.
-* Constraint on quanity of data being used
+* Constraint on quantity of data being used. For now, 4 or more sources should be sufficient. 
 * Hardwware constraints. Prototypep should be able to run on a decent laptop, shouldnt require high computation
 * Data constraint, only using free an availiable data archives 
 
