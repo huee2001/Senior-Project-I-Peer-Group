@@ -160,6 +160,9 @@ Complete design and test references during Assignments 2 and 3. -->
 | Handling a multi-domain required query | May not be as affective(unless testing says otherwise)  | Can delegate tasks to mitigate cross domain confusion |
 | Performance | May yield better results. May perform faster due to not waiting on supporting ai agents | May perform slower due to consolidating ai agents | 
 | Source Provenance consistency | May fall to hallucinations or inaccurate responses  |  Source provenance expected to remain consistent |
+
+*Context view*
+![Visual.](assets/contextview.png)
 ## 3 Alternatives and selected solution
 
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
