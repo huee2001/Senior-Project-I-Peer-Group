@@ -149,7 +149,17 @@ Complete design and test references during Assignments 2 and 3. -->
 *Way to check assumption 2*: Can review API documentation to see if actively going through change, can look at unique URLS and see if there was a change (i.e /api/v2 /api/v3/ etc)
 
 **Constraints:** Limits on time, tools, data, and resources.
+* Constraint on quanity of data being used
+* Hardwware constraints. Prototypep should be able to run on a decent laptop, shouldnt require high computation
+* Data constraint, only using free an availiable data archives 
 
+
+*Draft*
+| Criterion | Single LLM instead of delegating tasks | Four tier agentic architecture | 
+|---|---| ---|
+| Handling a multi-domain required query | May not be as affective(unless testing says otherwise)  | Can delegate tasks to mitigate cross domain confusion |
+| Performance | May yield better results. May perform faster due to not waiting on supporting ai agents | May perform slower due to consolidating ai agents | 
+| Source Provenance consistency | May fall to hallucinations or inaccurate responses  |  Source provenance expected to remain consistent |
 ## 3 Alternatives and selected solution
 
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
