@@ -94,6 +94,14 @@ University of delaware DRC hosts oldest archive of ontologist related works. The
 https://udspace.udel.edu/communities/bdc76090-7084-449f-a272-f6c7bdff1a5f/search
 
 
+"68% of people who have experienced a disaster say they wish they had prepared differently."
+https://www.unitedway.org/preparedness-survey-2026-snapshot
+
+
+Because agencies collect data in inconsistent ways and keep it locked in silos, it is tough to plan ahead, respond quickly, or help communities recover from disasters.
+
+https://www.preventionweb.net/news/increasing-national-resilience-through-open-disaster-data-initiative
+
 
 
 **Six-week contribution:** *State the small capability you will demonstrate.*
