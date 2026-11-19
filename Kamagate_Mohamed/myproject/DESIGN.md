@@ -195,8 +195,29 @@ Complete design and test references during Assignments 2 and 3. -->
 ![Visual.](assets/contextview.png)
 ## 3 Alternatives and selected solution
 
+*Required behavior* : 
+
+| ID | Required behavior and conditions | Acceptance check | Design and test reference |
+|---|---|---|---|
+| F1 | When a user submits a plain-language query about Hurricane Ida in NYC, the system must retrieve relevant passages from the static 20-document collection and display each passage's document title, source URL, and collection date. | Run test queries and manually check if each response has a source provenance  | Add as design develops |
+|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
+| F3 | When a user submits a query that cannot be answered form the 20-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
+| Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
 approaches under the same requirements, including a simple baseline. -->
+
+| Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
+|---|---|---|
+| F1 | 1 | 2  | 3 |
+|F2 | 1 | 2 | 3 |
+| F3 | 1 | 2 | 2 |
+| C1 | 1 | 2 | 3 |
+| Q1 | 1. | 2 | 3 |
+
+
+
+
 *Solution 1: four tier agentic architectuuure* 
 A user queries a adadptive knowledge broker. The knowledge broker breaks down the query into its semantic value tokens then delegates the tasks to specialized domain agent(s). The domain agent(s) have specialized knowledge on certain domains(i.e social science, physical science, policies etc.) They figure out what sources should be queiried and let functional agents do the physical work of actually calling the API's and checking the databases. These open Api's and databases are stored in the federate data layer. Lastly broke prepares the response back to the user.
 ![Visual.](assets/FourTierAgentic.png)
