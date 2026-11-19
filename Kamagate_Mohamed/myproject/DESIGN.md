@@ -36,6 +36,9 @@ peer-review report, review link, or review transcript is required. -->
 and next step. Link evidence when available. Update at each Friday deliverable. -->
 Initial start to the assignment. Developed an unuderstanding of how the vast amount of ontology knowledge may affect groups of people in terms of searchability, comprehension, and time management. Also learnt about the proposed solution given by the docuuument. Deals with four tier agentic architecture. The most newest update is cleaning up redundanciies for the week 1 assignment, remodeling the workflow so it doesn't include the proposed solution and demonstrates what is commonly happening instead. 
 
+
+*11/18*
+Narrowed down the approach for six week contribution; Will work with sources that does not require live Api calls and instead will work with static collections of data from sources like FEMA.gov and NYC emergency management. No need for AI tiers but may at best be considered for semester 2 scope. For now six week contribution will involve a RAG tier system, with multiple public documentation(around 20). My inventory next step would be to find specific material that would be useful to add to the vector database, around 20 material. 
 ## Contents
 
 - [1 Problem research and scope](#1-problem-research-and-scope)
@@ -83,6 +86,20 @@ Initial start to the assignment. Developed an unuderstanding of how the vast amo
 * User wants to do research on niche disaster topic
 * Uses search engine first. Sources provided may be too vague or loosely connected to user's query
 * Uses an LLM as an alternative, which falls victim to halluncinations. User may be skeptical of the results.
+
+<!-- Revision notes mention specific user question, Name the data sources and cite evidence that the intended user has trouble finding or interpreting them -->
+**Current workflow(Revised 11/18):**
+* User[Queens tenant. General public. Disaster victim. Apartment flood due to hurricane Ida] - Disaster related search["What financial help can I apply for, and what documents do I need?"]
+* User wants to search up what financial help they can apply for and required documents needed for it. User starts with google search
+* [Difficulty 1] Results lead to general news article about the event, or generic pages such as nyc.gov that branch out into multiple external links to other sites that may help.
+* [Difficulty 2] User search leads to OpenFEMA, which hosts dense datasets. Yet user lacks the technical skills to extract the required info from the dataset. OpenFema mainly provides Api's and not PDFs a user can download
+* User visits NYC emergency management and finds information about a different assistance program they may or may not qualify for.
+* User visits FEMA that provides information about the same or additional assistance program they may or may not qualify. User takes note of findings from both sites
+* User visits FloodNet that simulates the impact of the flood caused by hurricane ida. Takes note of this knowledge as supporting evidence for their application. 
+* User stitches together gathered information and makes an actionable descion.
+* Alternative: User uses an LLM to query his/her question. LLM provides a confident summary but citations can't be verified or missing.
+
+*Assumed current tasks*: User must search the archives separately and collect citations manually
 ![Visual.](assets/FourTierAgentic.png)
 ## Concrete Example
 An emergency manager wants to know which neighborhoods were slowlest to recover and most impacted by past storms. The answer is spread across different archives. Structural damage data sits in an engineering collection, the  amount of aid received sits in a social-science collection. Each archives uses different terms and formats. Realistically she wouldn't be able to investigate all the possible sources, so she only relies on several sources. 
@@ -106,6 +123,11 @@ https://www.preventionweb.net/news/increasing-national-resilience-through-open-d
 
 **Six-week contribution:** *State the small capability you will demonstrate.*
 Implement a RAG system. It'll be more static, the ai agent would query a vector database regarding flooding information in new york instead 
+
+**Six-week contribution(Revised 11/18)**
+For one New York flood event such as Hurricane Ida, the prototype retrieves relevant passages from a fixed collection of about 20 or so public documents from sources like FEMA.gov and NYC Emergency management. OpenFEMA, FloodNEt, and NYC Open data datasets are out of scope for this version since they require api calls. The prototype should be able to answer questions such as "What financial assistance was available after Ida, and what documents did it require?", and the result criteria would be every result/response to a query  provides a title, URL, and a collection date that links back to the source it retrieved the info from. For out of scope questions, the result criteria should be the system returns a response mentioning its limitations and provide no misleading text. 
+
+*Boundary*: Only dealing with static retrieval over fixed collection. No live api calls, no agent tiers for this scope. 
 
 **Semester II scope:** *Explain what the completed project will add.*
 Design it to be more scalable to accept a variety of disaster archives. Implement the four tier agentic architecture.
