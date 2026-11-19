@@ -207,15 +207,35 @@ Complete design and test references during Assignments 2 and 3. -->
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
 approaches under the same requirements, including a simple baseline. -->
 
-| Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
-|---|---|---|
-| F1 | 1 | 2  | 3 |
+| Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
+|---|---|---|---|
+| F1 | Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their url, collection date, and title as key values[^5] | LLM will generate a response while being enforced to return the passage it used url, title, collection date in the vector database   | 3 |
 |F2 | 1 | 2 | 3 |
 | F3 | 1 | 2 | 2 |
 | C1 | 1 | 2 | 3 |
 | Q1 | 1. | 2 | 3 |
+[^5]: {
+        "text": (
+            "To qualify for Housing Assistance, FEMA must confirm the applicant lived "
+            "at the disaster-damaged home as their primary residence. Rental Assistance "
+            "may be used to rent a house, apartment, manufactured home, recreational "
+            "vehicle or other readily fabricated dwelling."
+        ),
+        "title": "Individuals and Households Program Fact Sheet - FEMA",
+        "url": "https://www.fema.gov/sites/default/files/documents/fema_ia_individuals-households-program-fact-sheet_112024.pdf",
+        "collection_date": "2026-11-19",
+    },
+**KeywordSearch existing methods**: 
+* rank-bm25. Works by giving passages as list of words, and it scores it against a query. Scores based on rarity and term frequency. The highest scores will be the passage retrieved and cited based on what the query asked Alternative is SQLite FTS5:
+
+**Semantic retrivial existing methods**: 
+* Query becomes vector, system measures how close that vector is to each passage vector 
 
 
+|  |Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
+|---|---|---|---|
+| Strengths | 1 | 2  | 3 |
+|Weakness | Returns raw excerpts user must read and interpret | 2 | 3 |
 
 
 *Solution 1: four tier agentic architectuuure* 
