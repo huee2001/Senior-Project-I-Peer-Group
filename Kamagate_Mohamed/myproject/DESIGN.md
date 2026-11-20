@@ -144,25 +144,16 @@ Do not leave references to nonexistent images. -->
 
 
 
+
+
+ *11/20 Revised*
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
-| F1 | The federated data layer must retrieve records from distributed  archives while tracking and displaying the exact source provenance.[^3]| Run a multi-archive data synthesis check and verify every factual claim in the final output[^4] includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
-|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
-| F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| F1 | When a general public user submits a plain-language query about flood related disasters in NY such as Hurricane Ida, the system must retrieve relevant passages from the static 10-document collection and display each passage's document title, source URL, and collection date. | Run at least 5 of the test queries and manually check if each response has a source provenance| Add as design develops |
+|F2 | A general public user submits a query in plain language, and receives a response in plain language | Submit a query, and manual check the response to see if there is no heavy jargon from the generated response | Add as design develops |
+| F3 | When a user submits a query that cannot be answered form the 10-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
-| Q2 | More than half, out of a sample size of 20 queries, should be met with an accurate response.  | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. |Proposed. Not yet measured, will update to measured when results from test has been received |
-
-
- *11/18 Revised*
- | ID | Required behavior and conditions | Acceptance check | Design and test reference |
-|---|---|---|---|
-| F1 | The federated data layer must retrieve records from distributed  archives while tracking and displaying the exact source provenance.[^3]| Run a multi-archive data synthesis check and verify every factual claim in the final output[^4] includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
-|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
-| F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
-| C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
-| Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
-| Q2 | More than half, out of a sample size of 20 queries, should be met with an accurate response.  | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. |Proposed. Not yet measured, will update to measured when results from test has been received |
 [^3]: Knowing the origin of the source, which domain agents retrieved it, and prehaps a confidence score on how trustworthy the source is. Source provennance is essential to eliminate halluncinations. Also helps with accountability. 
 [^4]: In general, RAG responses take in user queries, then augment it with its own prompt. Can enforce the LLM to pull in not only the text, but the source ID along with every response. 
 
@@ -224,8 +215,7 @@ Do not leave references to nonexistent images. -->
 | F3 | When a user submits a query that cannot be answered form the 10-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
-<!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
-approaches under the same requirements, including a simple baseline. -->
+
 
 | Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
 |---|---|---|---|
@@ -245,10 +235,10 @@ approaches under the same requirements, including a simple baseline. -->
         "url": "https://www.fema.gov/sites/default/files/documents/fema_ia_individuals-households-program-fact-sheet_112024.pdf",
         "collection_date": "2026-11-19",
     },
-**KeywordSearch existing methods**: 
+**KeywordSearch existing methods**(Optional, WIP): 
 * rank-bm25. Works by giving passages as list of words, and it scores it against a query. Scores based on rarity and term frequency. The highest scores will be the passage retrieved and cited based on what the query asked Alternative is SQLite FTS5:
 
-**Semantic retrivial existing methods**: 
+**Semantic retrivial existing methods**(Optional, WIP): 
 * Query becomes vector, system measures how close that vector is to each passage vector 
 
 
@@ -272,25 +262,99 @@ approaches under the same requirements, including a simple baseline. -->
 * Prevents hallucinations and provides source provenance which is a requirement of the project
 * Works sufficiently well with time constraints. Four Tier Agentic architecture may take a considerable amount of time to implement
 * Works well with a static database, no need for API calls
-* 
 
 
-*Context view**: 
-### Decision 1
 
-**Context and requirement:** Why is a choice needed?  
-**Options:** Plausible alternatives.  
-**Decision and reason:** What you selected and why.  
-**Consequences:** Benefits, costs, and limitations.  
-**Status and revisit condition:** Proposed or accepted; what might change it?
+### Decision 1 - Architecture design - RAG system
 
-### Decision 2
 
-**Context and requirement:** Replace.  
-**Options:** Replace.  
-**Decision and reason:** Replace.  
+**Context and requirement:** The prototype must take in user plain-language queries about flood related disasters (Such as hurricane IDA) and answer questions using public sources(New York Emergency Management, FEMA, nyc.gov) attached with source provenance(F1, C1). The system should respond using plain language as well (F2), and refuse to make any unverifiable claims 10 document corpus isn't able to answer/support(F3) to prevent hallucinations and wrong information being given out.
+
+**Options:**
+
+* Keyword + metadata (serves as baseline)
+* Semantic RAG (single pipeline)
+* Four tier agentic architecture
+
+**Decision and reason:** Out of the 3 options, I selected the RAG system. It's good at preventing hallucinations and provides source provenance. Works sufficiently well with semester time constraint in comparison to Four tier architecture. Works well with static database, no need for API calls. 
+
+**Consequences:**  *Benefits*: (1) Doesn't rely on public API's that are subject to change. This way it's easier to test, verify and less likely to break the established pipeline. (2) Gives plain language answers traceable citations/sources. *Costs*: Low latency cost with retrieval being one step, however slower than keyword search. Does an extra step for each question (embed, search, call the LLM) with LLM causing most time. It can retrieve loosely related passages which affects C1 and Q2. Adds depencies compared to keyword search such as LLM, and an embedding model. 
+**Status and revisit condition:** Proposed. Feedback on this decsion or personal experiments may change the outcome.
+
+
+### Decision 2 - Flood related disasters - Narrowed data scope
+
+
+
+**Context and requirement:** The prototype must focus on disaster related information. There is a vast array of natural disasters that affect the general public, 
+
+* Heatwaves
+* Flood related events
+
+
+**Decision and reason:** Flood related events. The reason being flood related events causes more conercerns and damage in terms of displacements, infrastructure damage, and may require extensive knowledge on recovery programs. There are more people who are able to avoid heeatwaves than flood related events as well. 
+**Consequences:** *Benefits*: It helps and reaches a wider range of people compared to just heatwaves. *Cost/Limitation*: Easier to manage compared to working with more than 1 natural disaster, but misses out on reaching people who are more vulnerable to heatwaves. 
+**Status and revisit condition:** Accepted. May change based on feedback
+
+
+
+### Decision 3 - Enforce refusal for out of scope questions
+
+**Context and requirement:** The content in question is not only time sensitive, but having the right details is essential for being prepared and receiving assistance.   
+**Options:** 
+
+* Allow LLMs to generate their own response regardless of whats in static corpus
+* Prevent LLM from generating response if collection doesn't cover the query topic
+
+**Decision and reason:** It's a core required behavior to prevent out of scope questions. Letting a LLM be able to generate a response wihtout being backed up by factual information in static corpus, invites room for halluncination. This can negatively impact a user in need. 
 **Consequences:** Replace.  
 **Status and revisit condition:** Replace.
+
+### Context view:
+
+*System boundary*: Flood related events Q&A prototype
+
+*Actors*:
+* General public
+* New York resident
+
+*External Systems*: 
+
+* Public documentation/sources. FEMA, New York Emergency Management, and Ny.gov.
+* External model: any LLM. Together.ai possible canidate.
+
+
+### Running view (High level)
+1. **Query intake**: User submits a question
+2. **Retriever**: Retriever searches the static corpus (10 documents exist minimum), returns top candidate chunks with their attached metadata
+3. **Application safeguard**: If top canidate is below score threshold, return fixed limitation message. Otherwise augment the prompt with the labeled chunks with IDs and sends to LLM
+4. **LLM synthesized response**: LLM returns a generated response in plain language
+
+## Component responsibility table
+| Component | Responsibility | Information it needs | Result it produces |
+|---|---|---|---|
+| Query handler | Receive an incoming user query | User query string | Replace |
+| Retriever | Search the static 10-document collection, compute relevance scores, and check the cutoff threshold before LLM synthesis | Normalized query text, score threshold (0.4) | Ranked |
+| Application safe guard | Prevents LLM from generating a response, returns fixed message | Relevance scores from retriver | Either passes augmented prompt to LLM or returns fixed message |
+| LLM synthesized response | Synthesized a response for the user | Relevant sources that were retrieved | Synthesized a response that includes a plain language summary that answers the users query with relevant source provenance  |
+
+
+## State Changes & Error Handling
+**State changes**: Static corpus chunks and metadata (title, URL, collection date) remain read-only
+
+
+
+## Smallest useful implementation path
+1. Load small initial batch (10 documents or less) of static corpus each with their own chunk_id, title, url, collection date.
+2. Connect query handler with retriever + scoring. low-score queries return the fixed limitation message immediately without calling the LLM.
+3. For above-threshold queries, pass labeled chunks to the LLM, require chunk_id citations, and map IDs back to stored title, url, and collection_date in application code
+4. LLM generates response for user
+
+
+
+
+
+
 
 ## 4 Architectural design
 
@@ -435,10 +499,12 @@ complete in Assignment 6. -->
 | Revision date | Change to my design | Reason and evidence |
 |---|---|---|
 | 11/10 | Scoping out inputs and outputs | Based on the proposed solution, this is the expected workflow |
+| 11/20 | Specified one user, being a general public user living in new York,  instead of the 3 stakeholders. Modified required behavior, specifically F2 as a result(Left out persona tailored responses).  Deferred four tier agentic architecture strictly for semester 2.  Added example test sets that can be used to test prototype. Specified example public documentation, and acceptable answers in test sets. | Based on grading feedback and assignment details| 
 
 | Open question | Why it matters | Next action |
 |---|---|---|
 | What is the best AI framework to handle the four tier architecture presented  | An AI framework provides standard patterns for agent communication, allowing one agent's structured JSON output to automatically trigger the next agent's input without custom glue code. | Start iteratively first before introducing the AI framework. Design a RAG system before making it more dynamic |
+| What are some additional questions I can add to the test set | Used to test prototype | Work backwards. Go through documentations again to pull out key, clear answers, generate possible questions as a result |
 
 **Assistance and reuse:** Attribute sources, code, data, diagrams, and assistance under course policy.
 
