@@ -219,8 +219,8 @@ Do not leave references to nonexistent images. -->
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
-| F1 | When a user submits a plain-language query about Hurricane Ida in NYC, the system must retrieve relevant passages from the static 10-document collection and display each passage's document title, source URL, and collection date. | Run test queries and manually check if each response has a source provenance  | Add as design develops |
-|F2 | A flood victim and/or a potential flood victim submits a quey in plain language, and receives a response in plain language | Submit a query, and manual check the response to see if there is no heavy jargon from the generated response | Add as design develops |
+| F1 | When a general public user submits a plain-language query about flood related disasters in NY such as Hurricane Ida, the system must retrieve relevant passages from the static 10-document collection and display each passage's document title, source URL, and collection date. | Run at least 5 of the test queries and manually check if each response has a source provenance| Add as design develops |
+|F2 | A general public user submits a query in plain language, and receives a response in plain language | Submit a query, and manual check the response to see if there is no heavy jargon from the generated response | Add as design develops |
 | F3 | When a user submits a query that cannot be answered form the 10-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
@@ -229,10 +229,10 @@ approaches under the same requirements, including a simple baseline. -->
 
 | Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
 |---|---|---|---|
-| F1 | Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their URL, collection date, and title as key values[^5] | The retrieval component searches the static document chunks and returns relevant passages along with their attached metadata (title, url, and collection date, overall source provennance). The prompt now gets augmented with this new information for the LLM.  LLM will generate a response while being enforced to return the passage it used url, title, collection date.   | Routes queries across agent tiers and live/external sources to retrieve records and attach provenance |
-|F2 | Does not respond in plain-language. Only retrieves raw excerpts | Uses an LLM to help generate a response in plain language |  routes queries across specialized agents, and knowledge broker summarizes in plain language for user |
-| F3 | If keywords produce a score near 0, hardcode application to return a message "not found in collection" |  | 2 |
-| C1 | 1 | 2 | 3 |
+| F1 | Strongest in terms of exact provenance. Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their URL, collection date, and title as key values[^5] (small experiment) | Strongest in terms of grounded synthesize answers in plain language. The retrieval component searches the static document chunks and returns relevant passages along with their attached metadata (title, url, and collection date, overall source provenance). The prompt now gets augmented with this new information for the LLM.  LLM will generate a response while being enforced to return the passage it used url, title, collection date.(documentation/judgement)  | Routes queries across agent tiers and live/external sources to retrieve records and attach provenance (documentation and judgement) |
+|F2 |Weakest. Does not respond in plain-language. Only retrieves raw excerpts(small experiment) | Strongest in terms of plain language response over static collection. Uses an LLM to help generate a response in plain language(judgement/documentation) |  routes queries across specialized agents, and knowledge broker summarizes in plain language for user(documentation and judgement) |
+| F3 | Must be hardcoded. If keywords reach a score below threshold of 0.5, hardcode application to return a message "not found in collection"(judgement) | Uses a retrieval score cutoff(Threshold would be about 0.4) to reject out-of-scope queries before calling the LLM. Instead of returning the typical augmented prompt for the LLM, application responds with a fixed message about collection limitation, doesn't invent data, and suggests alternative sources(judgement/documentation) |  specialized domain agents consult the federated data layer, if no applicable source for the query, relies this to knowledge broker and knowledge broker states limitations, doesnt invent data, and suggests alternative sources(documentation and judgement) |
+| C1 | Strongest out of three and most direct. Returns exact verbatim passages directly paired with stored metadata (title, URL, collection date etc.) | Retriever retrieves the passages, which already has metadata attached, application code augments the prompt with this info for the LLM. LLM generates a response using the passage and their source provenance | Specialized agents attach source metadata from the federated data layer and the Knowledge Broker synthesizes cited answers. At risks of broken links due to complex coordination.(documentation and judgement) |
 | Q1 | 1. | 2 | 3 |
 [^5]: {
         "text": (
@@ -274,6 +274,8 @@ approaches under the same requirements, including a simple baseline. -->
 * Works well with a static database, no need for API calls
 * 
 
+
+*Context view**: 
 ### Decision 1
 
 **Context and requirement:** Why is a choice needed?  
