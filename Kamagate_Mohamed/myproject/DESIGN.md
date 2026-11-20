@@ -14,7 +14,9 @@ For this project, my scope will be narrowed to disasters that primarily affect N
 ### What this version leaves out
 
 - Limited to disasters that primarily affect New York and related archives (floods)
-- Considering not including personas in prototype
+- Persona tailored responses
+- agent tiers
+- no live api's
 
 **Author:** Mohamed Kamagate  
 **Course:** CSC 59866  
@@ -39,6 +41,12 @@ Initial start to the assignment. Developed an unuderstanding of how the vast amo
 
 *11/18*
 Narrowed down the approach for six week contribution; Will work with sources that does not require live Api calls and instead will work with static collections of data from sources like FEMA.gov and NYC emergency management. No need for AI tiers but may at best be considered for semester 2 scope. For now six week contribution will involve a RAG tier system, with multiple public documentation(around 20). My inventory next step would be to find specific material that would be useful to add to the vector database, around 20 material. 
+
+*11/19*
+Modified required behavior. F2, previously requiring persona tailored response is no longer a requirement and is omitted for now or may be deferred to semester II. F2's new requirement is needing the response to be in plain language instead for one user. The one user in question would be the general public, specifically those who are affected by floods or or in flood prone zones and would like to prepare.
+
+Added more specific test questions that includes acceptable answers, the source passage you can find the answer, and whether or not it can be answered in section 2 
+
 ## Contents
 
 - [1 Problem research and scope](#1-problem-research-and-scope)
@@ -153,7 +161,17 @@ Complete design and test references during Assignments 2 and 3. -->
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
 | Q2 | More than half, out of a sample size of 20 queries, should be met with an accurate response.  | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. |Proposed. Not yet measured, will update to measured when results from test has been received |
- 
+
+
+ *11/18 Revised*
+ | ID | Required behavior and conditions | Acceptance check | Design and test reference |
+|---|---|---|---|
+| F1 | The federated data layer must retrieve records from distributed  archives while tracking and displaying the exact source provenance.[^3]| Run a multi-archive data synthesis check and verify every factual claim in the final output[^4] includes a verifiable citation back to its original repository source (as suggested by partner). | Add as design develops |
+|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
+| F3 | An unanswerable or out of scope query is handled safely | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
+| Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
+| Q2 | More than half, out of a sample size of 20 queries, should be met with an accurate response.  | Can either implement a confidence level to each response given by ai agent, or manually check the sources given each time for testing. |Proposed. Not yet measured, will update to measured when results from test has been received |
 [^3]: Knowing the origin of the source, which domain agents retrieved it, and prehaps a confidence score on how trustworthy the source is. Source provennance is essential to eliminate halluncinations. Also helps with accountability. 
 [^4]: In general, RAG responses take in user queries, then augment it with its own prompt. Can enforce the LLM to pull in not only the text, but the source ID along with every response. 
 
@@ -164,6 +182,18 @@ Complete design and test references during Assignments 2 and 3. -->
 1. Correctly cited sources that can be verified
 2. Persona-matched responses seem aaccurate
 3. Zero fabricated answers/halluncinations for out of scope query.
+
+
+*11/19 Revised test set and pass criteria*
+
+| ID |Question | In-scope | Source passage | Acceptable/Expected answer |
+|---|---|---|---|---|
+| T1 | What financial assistance was available after Hurricane Ida, and what documents did it require? | Yes | FEMA(https://www.fema.gov/fact-sheet/programs-and-assistance-approved-hurricane-ida-survivors, https://www.fema.gov/fact-sheet/faq-setting-record-straight-fema-assistance-hurricane-ida-ny and pdf file https://fema.gov/print/pdf/node/629092) | Program name(s), document list, source passage. A couple of acceptable program names: "FEMA’s National Flood Insurance Program", "U.S. Small Business Administration", "Hurricane Ida Relief Fund for Excluded New Yorkers:" |
+|T2 | How do I apply for FEMA assistance after the flood caused by Ida, and what was the deadline? | Yes | FEMA(https://www.fema.gov/fact-sheet/programs-and-assistance-approved-hurricane-ida-survivors, https://www.fema.gov/fact-sheet/faq-setting-record-straight-fema-assistance-hurricane-ida-ny and pdf file https://fema.gov/print/pdf/node/629092) | Application methods, exact deadline as stated in the source(Monday, Dec. 6), and the source passage|
+| T3 | How do I get flood alerts if I live in a basement apartment  | Yes | NY.gov and/or NYEM (https://www.nyc.gov/site/em/ready/be-ready-new-york.page)  | Sign up for Notify NYC and choose the basement apartment alert option. Must cite the official NYC page. |
+| T4 | What’s the difference between a Flash Flood Watch and a Flash Flood Warning? | Yes | NY.gov and/or NYEM (https://www.nyc.gov/site/em/ready/flooding.page)  | A watch means conditions favor flash flooding but it isn’t certain or imminent. A warning means flash flooding is in progress, imminent, or highly likely. Anything along these lines. Also include source passage |
+| T5 | Can renters get flood insurance? | Yes | FEMA or floodhelpny(https://floodhelpny.org/en/understanding-flood-insurance) | Should expect a "Yes". The page says all homeowners, renters, and business owners are eligible for flood insurance|
+| T6 | What are some assistances I can get after experiencing hurricane Isaias | Not in scope. Hurricane Isais is in Florida | N/A | State limitations and the question being beyond scope.|
 
 **Inputs and outputs:** Give an ordinary example and an unsuccessful example.
 *Ordinary example*: Takes in user query as input, returns response to query as output. The response should have source provenance, and be tailored to the user's persona(may omit this part)
@@ -199,9 +229,9 @@ Complete design and test references during Assignments 2 and 3. -->
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
-| F1 | When a user submits a plain-language query about Hurricane Ida in NYC, the system must retrieve relevant passages from the static 20-document collection and display each passage's document title, source URL, and collection date. | Run test queries and manually check if each response has a source provenance  | Add as design develops |
-|F2 | An emergency manager, disaster researcher or the general public can submit a plain-language query (e.g., requesting FEMA grant requirements or localized flood-risk data) and obtain persona tailored response to the query. | Submit three distinct queries, each pertaining to one of the 3 different personas. Inspect the response to see if matches the tone of the given persona. Accuracy decided by subtle differences in jargon. | Add as design develops |
-| F3 | When a user submits a query that cannot be answered form the 20-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| F1 | When a user submits a plain-language query about Hurricane Ida in NYC, the system must retrieve relevant passages from the static 10-document collection and display each passage's document title, source URL, and collection date. | Run test queries and manually check if each response has a source provenance  | Add as design develops |
+|F2 | A flood victim and/or a potential flood victim submits a quey in plain language, and receives a response in plain language | Submit a query, and manual check the response to see if there is no heavy jargon from the generated response | Add as design develops |
+| F3 | When a user submits a query that cannot be answered form the 10-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
 <!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
