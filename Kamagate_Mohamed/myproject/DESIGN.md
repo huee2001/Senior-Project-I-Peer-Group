@@ -1,9 +1,7 @@
 # AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence
 
 
-<!-- Copy this file into your project directory as DESIGN.md. Replace prompts
-with your own explanations as sections become due. Create assets and evidence
-directories for files you include. Remove instructional comments at final submission. -->
+
 ## Problem and scope
 Disasters can take place any time. It's important to be prepared for, properly respond to, and recover from said disasters. The problem is disaster information is spread across many repositories , fragmented known as silos. These data silos often compliment each other or further elaborate on each other but alone they aren't as useful. The emergency responders, disaster scientist, and the general public affected by these disasters may not have the time to consolidate all these fragmented information. The general public especially may not have the means to these resources locked behind universities(i.e requiring a scholarly account/email.) or understand the jargon. The aim of this project is to democratize technology by providing a plain language query interface with real-time accurate information
 
@@ -27,15 +25,10 @@ For this project, my scope will be narrowed to disasters that primarily affect N
 **Last updated:** 11/10 
 **Document status:** Proposed
 
-<!-- Commit and push by Friday. Supply the exact commit identifier through the
-course submission channel. Every Monday, present your own work and orally review
-the same selected group mate for the remainder of the semester. No written
-peer-review report, review link, or review transcript is required. -->
 
 ## Progress note
 
-<!-- Write 100â€“150 words: changes, learning, main open issue, feedback addressed,
-and next step. Link evidence when available. Update at each Friday deliverable. -->
+
 Initial start to the assignment. Developed an unuderstanding of how the vast amount of ontology knowledge may affect groups of people in terms of searchability, comprehension, and time management. Also learnt about the proposed solution given by the docuuument. Deals with four tier agentic architecture. The most newest update is cleaning up redundanciies for the week 1 assignment, remodeling the workflow so it doesn't include the proposed solution and demonstrates what is commonly happening instead. 
 
 
@@ -149,9 +142,7 @@ Do not leave references to nonexistent images. -->
 
 ## 2 Requirements and system specification
 
-<!-- Assignment 2. Explain required behavior before implementation methods.
-Start with 3â€“5 functions, a correctness rule, and a quality target.
-Complete design and test references during Assignments 2 and 3. -->
+
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 |---|---|---|---|
@@ -221,8 +212,7 @@ Complete design and test references during Assignments 2 and 3. -->
 | Performance | May yield better results. May perform faster due to not waiting on supporting ai agents | May perform slower due to consolidating ai agents | 
 | Source Provenance consistency | May fall to hallucinations or inaccurate responses  |  Source provenance expected to remain consistent |
 
-*Context view*
-![Visual.](assets/contextview.png)
+
 ## 3 Alternatives and selected solution
 
 *Required behavior* : 
@@ -239,9 +229,9 @@ approaches under the same requirements, including a simple baseline. -->
 
 | Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
 |---|---|---|---|
-| F1 | Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their url, collection date, and title as key values[^5] | LLM will generate a response while being enforced to return the passage it used url, title, collection date in the vector database   | 3 |
-|F2 | 1 | 2 | 3 |
-| F3 | 1 | 2 | 2 |
+| F1 | Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their URL, collection date, and title as key values[^5] | The retrieval component searches the static document chunks and returns relevant passages along with their attached metadata (title, url, and collection date, overall source provennance). The prompt now gets augmented with this new information for the LLM.  LLM will generate a response while being enforced to return the passage it used url, title, collection date.   | Routes queries across agent tiers and live/external sources to retrieve records and attach provenance |
+|F2 | Does not respond in plain-language. Only retrieves raw excerpts | Uses an LLM to help generate a response in plain language |  routes queries across specialized agents, and knowledge broker summarizes in plain language for user |
+| F3 | If keywords produce a score near 0, hardcode application to return a message "not found in collection" |  | 2 |
 | C1 | 1 | 2 | 3 |
 | Q1 | 1. | 2 | 3 |
 [^5]: {
@@ -264,13 +254,11 @@ approaches under the same requirements, including a simple baseline. -->
 
 |  |Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
 |---|---|---|---|
-| Strengths | 1 | 2  | 3 |
-|Weakness | Returns raw excerpts user must read and interpret | 2 | 3 |
+| Strengths | Zero chance for halluncinations | Prevents halluncionations and package response in plain language  | Prevents hallucinations and is useful for coordination. Can handle large scale archives and very scalable |
+|Weakness | Returns raw excerpts user must read and interpret | Static database | Difficult implementation |
 
 
-*Solution 1: four tier agentic architectuuure* 
-A user queries a adadptive knowledge broker. The knowledge broker breaks down the query into its semantic value tokens then delegates the tasks to specialized domain agent(s). The domain agent(s) have specialized knowledge on certain domains(i.e social science, physical science, policies etc.) They figure out what sources should be queiried and let functional agents do the physical work of actually calling the API's and checking the databases. These open Api's and databases are stored in the federate data layer. Lastly broke prepares the response back to the user.
-![Visual.](assets/FourTierAgentic.png)
+
 
 | Approach and source | Useful behavior | Limitation | Evidence or assumption |
 |---|---|---|---|
@@ -278,6 +266,13 @@ A user queries a adadptive knowledge broker. The knowledge broker breaks down th
 | Candidate alternative | Replace | Replace | Replace |
 
 **Choice and reason:** Connect your choice to requirements and constraints.
+**Picked**: RAG system
+
+**Reasoning**: 
+* Prevents hallucinations and provides source provenance which is a requirement of the project
+* Works sufficiently well with time constraints. Four Tier Agentic architecture may take a considerable amount of time to implement
+* Works well with a static database, no need for API calls
+* 
 
 ### Decision 1
 
