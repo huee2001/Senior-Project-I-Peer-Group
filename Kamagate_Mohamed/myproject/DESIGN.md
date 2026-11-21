@@ -223,7 +223,7 @@ Do not leave references to nonexistent images. -->
 |F2 |Weakest. Does not respond in plain-language. Only retrieves raw excerpts(small experiment) | Strongest in terms of plain language response over static collection. Uses an LLM to help generate a response in plain language(judgement/documentation) |  routes queries across specialized agents, and knowledge broker summarizes in plain language for user(documentation and judgement) |
 | F3 | Must be hardcoded. If keywords reach a score below threshold of 0.5, hardcode application to return a message "not found in collection"(judgement) | Uses a retrieval score cutoff(Threshold would be about 0.4) to reject out-of-scope queries before calling the LLM. Instead of returning the typical augmented prompt for the LLM, application responds with a fixed message about collection limitation, doesn't invent data, and suggests alternative sources(judgement/documentation) |  specialized domain agents consult the federated data layer, if no applicable source for the query, relies this to knowledge broker and knowledge broker states limitations, doesnt invent data, and suggests alternative sources(documentation and judgement) |
 | C1 | Strongest out of three and most direct. Returns exact verbatim passages directly paired with stored metadata (title, URL, collection date etc.) | Retriever retrieves the passages, which already has metadata attached, application code augments the prompt with this info for the LLM. LLM generates a response using the passage and their source provenance | Specialized agents attach source metadata from the federated data layer and the Knowledge Broker synthesizes cited answers. At risks of broken links due to complex coordination.(documentation and judgement) |
-| Q1 | 1. | 2 | 3 |
+| Q1 | Fastest execution. | Moderate to fast execution. | Slowest / highest variance. After decomposing multi-domain query, sends across multiple specialized agents. |
 [^5]: {
         "text": (
             "To qualify for Housing Assistance, FEMA must confirm the applicant lived "
@@ -250,18 +250,8 @@ Do not leave references to nonexistent images. -->
 
 
 
-| Approach and source | Useful behavior | Limitation | Evidence or assumption |
-|---|---|---|---|
-| Simple baseline | Replace | Replace | Replace |
-| Candidate alternative | Replace | Replace | Replace |
 
-**Choice and reason:** Connect your choice to requirements and constraints.
-**Picked**: RAG system
 
-**Reasoning**: 
-* Prevents hallucinations and provides source provenance which is a requirement of the project
-* Works sufficiently well with time constraints. Four Tier Agentic architecture may take a considerable amount of time to implement
-* Works well with a static database, no need for API calls
 
 
 
@@ -329,23 +319,49 @@ Do not leave references to nonexistent images. -->
 2. **Retriever**: Retriever searches the static corpus (10 documents exist minimum), returns top candidate chunks with their attached metadata
 3. **Application safeguard**: If top canidate is below score threshold, return fixed limitation message. Otherwise augment the prompt with the labeled chunks with IDs and sends to LLM
 4. **LLM synthesized response**: LLM returns a generated response in plain language
+5. **Static Corpus**: Holds the static corpus in chunks.
 
 ## Component responsibility table
 | Component | Responsibility | Information it needs | Result it produces |
 |---|---|---|---|
-| Query handler | Receive an incoming user query | User query string | Replace |
-| Retriever | Search the static 10-document collection, compute relevance scores, and check the cutoff threshold before LLM synthesis | Normalized query text, score threshold (0.4) | Ranked |
+| Corpus store | Holds 10 static corpus as chunks | Chunk ID, plus each chunk's text, title, URL, collection date | Chunk records, read-only| 
+| Query handler | Receive an incoming user query | User query string/User question | The final response: a verified answer with sources, a refusal, or an error message |
+| Retriever | Search the static 10-document collection, compute relevance scores, and check the cutoff threshold before LLM synthesis | Normalized query text, score threshold (0.4) | Top-k chunk IDs with score |
 | Application safe guard | Prevents LLM from generating a response, returns fixed message | Relevance scores from retriver | Either passes augmented prompt to LLM or returns fixed message |
 | LLM synthesized response | Synthesized a response for the user | Relevant sources that were retrieved | Synthesized a response that includes a plain language summary that answers the users query with relevant source provenance  |
 
 
-## State Changes & Error Handling
-**State changes**: Static corpus chunks and metadata (title, URL, collection date) remain read-only
+## Critical Operation
+**Critical operation:** answer an above-threshold question with verified citations
+
+**Linked Requirements:** C1 (every claim comes with citable source) and F1 (cited answer with title, URL, collection date).
+
+**Inputs:**
+* The user's question (non-empty query)
+* The top-K retrieved chunks with their scores, each labeled with its chunk_id
+* The raw LLM answer containing chunk_id citations.
+
+**Outputs**: 
+* On success: answer text, plus for each citation the stored title, URL, and collection date.
+* On failure: a fixed "could not produce a verified answer" message. This is separate from the out-of-scope message (F3), since the question may be answerable but the system failed to respond
+
+**State changes**:
+* Corpus and metadata doesn't change.
+* Can optionally append json records(query, chunks retrieved, out come status) to logs
+
+
+| Errors| Handling |
+|---|---|
+| Empty or whitespace submission | Ask for question, no retrieval  |
+| LLM call times out or fails | Return the fixed message, "could not produce a verified answer"  |
+| Answer contains no citations | Reject the answer |
+|Answer cites a chunk_id not in the retrieved set | Reject the answer |
+
 
 
 
 ## Smallest useful implementation path
-1. Load small initial batch (10 documents or less) of static corpus each with their own chunk_id, title, url, collection date.
+1. Load small initial batch (10 documents) of static corpus split into chunks  with their own chunk_id, title, url, collection date.
 2. Connect query handler with retriever + scoring. low-score queries return the fixed limitation message immediately without calling the LLM.
 3. For above-threshold queries, pass labeled chunks to the LLM, require chunk_id citations, and map IDs back to stored title, url, and collection_date in application code
 4. LLM generates response for user
