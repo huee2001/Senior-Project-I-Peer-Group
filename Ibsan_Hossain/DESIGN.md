@@ -321,39 +321,9 @@ The architecture is described at two levels:
 
 ## Architecture view - target Semester II product
 
-```mermaid
-flowchart LR
-    User[User]
-    Web[Web UI]
-    Map[Schema Mapping and Validation]
-    Coord[Migration Coordinator]
-    Split[Batch Splitter]
-    W1[Worker 1]
-    W2[Worker 2]
-    DB[(PostgreSQL)]
-    Monitor[Monitoring and Error Reporting]
-    Recon[Reconciler]
-    Change[File Change Tracker]
+![Target Semester II system architecture](assets/architecture_view.png)
 
-    User --> Web
-    Web --> Map
-    Map --> Coord
-    Coord --> Split
-    Split --> W1
-    Split --> W2
-    W1 --> DB
-    W2 --> DB
-    W1 --> Monitor
-    W2 --> Monitor
-    Coord --> Monitor
-    DB --> Recon
-    Recon --> Monitor
-    Monitor --> Web
-    Web --> Change
-    Change --> Coord
-```
-
-*Figure 2. Target Semester II architecture.*
+*Figure 2. Target Semester II system architecture.*
 
 ## Context view - first core prototype
 
