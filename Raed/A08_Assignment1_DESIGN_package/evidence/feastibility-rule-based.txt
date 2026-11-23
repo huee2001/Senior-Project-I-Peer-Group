@@ -1,0 +1,96 @@
+RULE-BASED EVENT EXTRACTION FEASIBILITY TEST
+====================================================
+Supported Test 1
+Question: What information is available about Hurricane Sandy?
+Expected: Hurricane Sandy
+Actual:   Hurricane Sandy
+Result:   PASS
+
+Supported Test 2
+Question: Show me reports about Hurricane Sandy.
+Expected: Hurricane Sandy
+Actual:   Hurricane Sandy
+Result:   PASS
+
+Supported Test 3
+Question: What records exist for Hurricane Katrina?
+Expected: Hurricane Katrina
+Actual:   Hurricane Katrina
+Result:   PASS
+
+Supported Test 4
+Question: Find information about Hurricane Katrina.
+Expected: Hurricane Katrina
+Actual:   Hurricane Katrina
+Result:   PASS
+
+Supported Test 5
+Question: Show me records for Hurricane Harvey.
+Expected: Hurricane Harvey
+Actual:   Hurricane Harvey
+Result:   PASS
+
+Supported Test 6
+Question: What information is available on Hurricane Harvey?
+Expected: Hurricane Harvey
+Actual:   Hurricane Harvey
+Result:   PASS
+
+Supported Test 7
+Question: Find reports about Hurricane Ian.
+Expected: Hurricane Ian
+Actual:   Hurricane Ian
+Result:   PASS
+
+Supported Test 8
+Question: What records are available for Hurricane Ian?
+Expected: Hurricane Ian
+Actual:   Hurricane Ian
+Result:   PASS
+
+Supported Test 9
+Question: I need reports about the Camp Fire.
+Expected: Camp Fire
+Actual:   Camp Fire
+Result:   PASS
+
+Supported Test 10
+Question: What information is available about the Camp Fire?
+Expected: Camp Fire
+Actual:   Camp Fire
+Result:   PASS
+
+Supported Test 11
+Question: What studies mention the Northridge earthquake?
+Expected: Northridge earthquake
+Actual:   Northridge earthquake
+Result:   PASS
+
+Supported Test 12
+Question: Find records about the Northridge earthquake.
+Expected: Northridge earthquake
+Actual:   Northridge earthquake
+Result:   PASS
+
+Unsupported Test 1
+Question: What information is available?
+Expected: None
+Actual:   None
+Result:   PASS
+
+Unsupported Test 2
+Question: Show me disaster reports.
+Expected: None
+Actual:   None
+Result:   PASS
+
+Unsupported Test 3
+Question: Find information about storms.
+Expected: None
+Actual:   None
+Result:   PASS
+
+====================================================
+SUMMARY
+Supported questions correct: 12/12
+Unsupported questions correctly rejected: 3/3
