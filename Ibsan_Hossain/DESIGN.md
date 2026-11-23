@@ -595,7 +595,7 @@ It supports the batch design, but it does not prove PostgreSQL behavior for the 
 
 ## Run instructions and CI
 
-The feasibility experiment will be kept in the repository with its output evidence.
+The feasibility experiment procedure and its recorded output evidence are included in Section 9 of this design document.
 
 The full PostgreSQL migration instructions will be added to `README.md` as that path is implemented.
 
