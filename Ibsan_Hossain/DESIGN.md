@@ -578,9 +578,6 @@ The exact retry limit, timeout behavior, monitoring-event format, and persistent
 
 **Work to come - Assignment 4.**
 
-
-# 9 Implementation and feasibility
-
 # 9 Implementation and feasibility
 
 ## Minimal implementation path
