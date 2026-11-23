@@ -6,7 +6,7 @@
 Disasters can take place any time. It's important to be prepared for, properly respond to, and recover from said disasters. The problem is disaster information is spread across many repositories , fragmented known as silos. These data silos often compliment each other or further elaborate on each other but alone they aren't as useful. The emergency responders, disaster scientist, and the general public affected by these disasters may not have the time to consolidate all these fragmented information. The general public especially may not have the means to these resources locked behind universities(i.e requiring a scholarly account/email.) or understand the jargon. The aim of this project is to democratize technology by providing a plain language query interface with real-time accurate information
 
 
-For this project, my scope will be narrowed to disasters that primarily affect New York (i.e Floods, hurricane, heat waves).
+For this project, my scope will be narrowed to disasters that primarily affects New York (i.e Floods, hurricane, heat waves).
 
 
 ### What this version leaves out
@@ -36,7 +36,7 @@ Initial start to the assignment. Developed an unuderstanding of how the vast amo
 Narrowed down the approach for six week contribution; Will work with sources that does not require live Api calls and instead will work with static collections of data from sources like FEMA.gov and NYC emergency management. No need for AI tiers but may at best be considered for semester 2 scope. For now six week contribution will involve a RAG tier system, with multiple public documentation(around 10). My inventory next step would be to find specific material that would be useful to add to the knowledge base, around 10 material. 
 
 *11/19*
-Modified required behavior. F2, previously requiring persona tailored response is no longer a requirement and is omitted for now or may be deferred to semester II. F2's new requirement is needing the response to be in plain language instead for one user. The one user in question would be the general public, specifically those who are affected by floods or or in flood prone zones and would like to prepare.
+Modified required behavior. F2, previously requiring persona tailored response is no longer a requirement and is omitted for now or may be deferred to semester II. F2's new requirement is needing the response to be in plain language instead for one user. The one user in question would be the general public, specifically those who are living in NY and are affected by floods or are in flood prone zones and would like to prepare.
 
 Added more specific test questions that includes acceptable answers, the source passage you can find the answer, and whether or not it can be answered in section 2 
 
