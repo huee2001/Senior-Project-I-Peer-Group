@@ -33,7 +33,7 @@ Initial start to the assignment. Developed an unuderstanding of how the vast amo
 
 
 *11/18*
-Narrowed down the approach for six week contribution; Will work with sources that does not require live Api calls and instead will work with static collections of data from sources like FEMA.gov and NYC emergency management. No need for AI tiers but may at best be considered for semester 2 scope. For now six week contribution will involve a RAG tier system, with multiple public documentation(around 20). My inventory next step would be to find specific material that would be useful to add to the vector database, around 20 material. 
+Narrowed down the approach for six week contribution; Will work with sources that does not require live Api calls and instead will work with static collections of data from sources like FEMA.gov and NYC emergency management. No need for AI tiers but may at best be considered for semester 2 scope. For now six week contribution will involve a RAG tier system, with multiple public documentation(around 10). My inventory next step would be to find specific material that would be useful to add to the knowledge base, around 10 material. 
 
 *11/19*
 Modified required behavior. F2, previously requiring persona tailored response is no longer a requirement and is omitted for now or may be deferred to semester II. F2's new requirement is needing the response to be in plain language instead for one user. The one user in question would be the general public, specifically those who are affected by floods or or in flood prone zones and would like to prepare.
@@ -216,7 +216,7 @@ Do not leave references to nonexistent images. -->
 | C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
 | Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
 
-
+*Comparison across requirements*
 | Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
 |---|---|---|---|
 | F1 | Strongest in terms of exact provenance. Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their URL, collection date, and title as key values[^5] (small experiment) | Strongest in terms of grounded synthesize answers in plain language. The retrieval component searches the static document chunks and returns relevant passages along with their attached metadata (title, url, and collection date, overall source provenance). The prompt now gets augmented with this new information for the LLM.  LLM will generate a response while being enforced to return the passage it used url, title, collection date.(documentation/judgement)  | Routes queries across agent tiers and live/external sources to retrieve records and attach provenance (documentation and judgement) |
