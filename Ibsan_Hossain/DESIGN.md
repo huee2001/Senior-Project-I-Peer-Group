@@ -4,8 +4,8 @@
 **Course:** CSC 59866  
 **Selected project and option:** B2 - Reliable Data Exchange for Integrated Justice Records; generalized as a data-migration system  
 **Current assignment:** 3  
-**Sunday commit deadline:** November 22, 2026, at 11:59 p.m. New York time  
-**Monday presentation:** November 23, 2026, at 6:30 p.m. New York time  
+**Sunday commit deadline:** November 22, 2026  
+**Monday presentation:** November 23, 2026 
 **Last updated:** November 22, 2026  
 **Document status:** Revised - ready for review
 
