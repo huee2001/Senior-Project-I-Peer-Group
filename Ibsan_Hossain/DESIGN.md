@@ -581,49 +581,25 @@ The exact retry limit, timeout behavior, monitoring-event format, and persistent
 
 # 9 Implementation and feasibility
 
+# 9 Implementation and feasibility
+
 ## Minimal implementation path
 
-The smallest implementation path is intentionally narrower than the final product:
+The first working path will use a 1,000-row synthetic employee CSV with one fixed mapping. The file will be divided into ten batches of 100 rows and processed using exactly two worker processes.
 
-1. read a 1,000-row synthetic employee CSV,
-2. validate the required fields,
-3. use one fixed employee mapping,
-4. split the file into ten 100-row batches,
-5. process the batches using exactly two worker processes,
-6. store accepted transformed records,
-7. record rejected rows and batch errors,
-8. expose basic progress/error information through the coordinator/run report, and
-9. reconcile source IDs against destination and rejection results.
+Each worker will transform the assigned records and load accepted rows into PostgreSQL. The system will also record rejected rows and use reconciliation to check for missing or duplicate IDs.
 
-The first path temporarily bypasses the web upload/mapping interface and F5 change tracking so the distributed-processing and correctness behavior can be proven first. After the core path works, the web UI, interactive mapping, richer monitoring, and file-based change tracking can be connected around it.
+The web interface, interactive field mapping, richer monitoring, and file-based change tracking will be added after the core migration path is working.
 
 ## Feasibility experiment
 
-### Question
+**Question:** Can a 100-row batch fail before commit and then be retried without leaving partial data, missing IDs, or duplicate IDs?
 
-Can a 100-row batch fail before commit and then be retried without leaving partial data, missing IDs, or duplicate IDs?
+**Procedure:** A small Python experiment created 100 synthetic employee records with IDs E0001 through E0100. The records were written inside one transaction. A simulated failure occurred after row 37 was written but before the transaction committed. The transaction was then rolled back, the stored rows were checked, and the complete 100-row batch was retried.
 
-### Procedure
-
-A small Python experiment created 100 synthetic employee records with IDs E0001 through E0100.
-
-The test:
-
-1. began one transaction for the 100-row batch,
-2. transformed and inserted records,
-3. raised a simulated failure after the 37th row was written but before the transaction committed,
-4. rolled back the transaction,
-5. checked the number of rows remaining,
-6. retried the full 100-row batch,
-7. committed the retry, and
-8. checked the IDs and mapped values.
-
-SQLite was used as a lightweight stand-in for this experiment. PostgreSQL remains the planned final destination and will need the same failure test later.
-
-### Actual evidence
+**Evidence and finding:**
 
 ```text
-Failure: simulated failure after writing row 37 before commit
 Rows stored after rollback: 0
 Rows stored after retry: 100
 Missing IDs after retry: 0
@@ -631,43 +607,21 @@ Duplicate IDs after retry: 0
 Rows with incorrect mapped values: 0
 ```
 
-### Finding
+The experiment showed that rollback prevented a partially completed batch from remaining in the destination. After retrying the full batch, all 100 expected IDs appeared exactly once with the correct mapped values.
 
-The experiment supports using the batch as the transaction and failure unit.
+**Design consequence:** Use a batch of at most 100 rows as the initial transaction and failure unit. If a worker or database failure occurs before commit, the entire batch should be rolled back and retried instead of continuing from an uncertain row.
 
-Even though 37 rows had been written inside the transaction, rollback left zero committed destination rows from the failed batch. After retrying the complete batch, all 100 expected IDs were present exactly once and their mapped values were correct.
-
-### Resulting design decision
-
-Keep a 100-row batch as the initial transaction and failure unit.
-
-If a batch fails before commit, roll back the entire batch and retry the full batch rather than trying to resume at an uncertain row.
-
-### Limitation
-
-This experiment used SQLite rather than PostgreSQL. It supports the batch design, but it does not prove PostgreSQL-specific behavior for the final implementation. The same controlled failure should be tested with PostgreSQL later.
+**Limit:** SQLite was used as a lightweight stand-in for this experiment. PostgreSQL remains the planned destination, so the same controlled failure should be tested with PostgreSQL during the later implementation.
 
 ## Current implementation status
 
-**Implemented:** The feasibility experiment uses 100 synthetic keyed employee rows, the fixed field transformation, transactional batch writes, rollback, full-batch retry, and checks for missing IDs, duplicate IDs, and incorrect mapped values.
-
-**Reused:** Python and SQLite transaction support were used for the small feasibility experiment. PostgreSQL transactions and Python process support are planned dependencies for the core implementation.
-
-**Simulated:** A controlled failure was triggered after row 37 was written inside the open transaction but before commit.
-
-**Blocked:** No current blocker has been identified. PostgreSQL-specific failure behavior is still untested and remains a follow-up check.
-
-**Deferred until the core path works:** The web upload interface, interactive field mapping, richer monitoring/error reporting, file-based change detection, and additional structured input formats.
-
-**Next core implementation work:** PostgreSQL, a 1,000-row input, a 100-row batch splitter, one-worker mode, exactly two-worker mode, basic coordinator progress/error reporting, and the reconciliation report.
-
-## Run instructions and CI
-
-The feasibility experiment procedure and its recorded output evidence are included in Section 9 of this design document.
-
-The full PostgreSQL migration instructions will be added to `README.md` as that path is implemented.
-
-Automated CI for the complete migration path is not yet configured.
+| Status | Description |
+|---|---|
+| Tested | 100-row transaction rollback and full-batch retry |
+| Reused | Python and SQLite transaction support |
+| Simulated | Failure after row 37 before commit |
+| Planned | PostgreSQL, 1,000-row input, batch splitter, one-worker mode, and two-worker mode |
+| Deferred | Web UI, interactive mapping, richer monitoring, and file-based change tracking |
 
 # 10 Testing and verification
 
