@@ -3,15 +3,15 @@
 **Author:** Raed Jaber  
 **Course:** CSC 59866  
 **Selected project and option:** A08 — Plain-Language Search Across Disaster Data Archives, based on NSF Project 10 (Award 2609535)  
-**Current assignment:** 2 — Requirements and possible solutions  
-**Friday commit deadline:** November 13, 2026, at 11:59 p.m. New York time  
-**Monday presentation:** November 16, 2026, at 6:30 p.m. New York time  
-**Last updated:** November 13, 2026  
+**Current assignment:** 3 — Architecture and component interfaces  
+**Sunday commit deadline:** November 22, 2026, at 11:59 p.m. New York time  
+**Monday presentation:** November 23, 2026, at 6:30 p.m. New York time  
+**Last updated:** November 22, 2026  
 **Document status:** Revised
 
 ## Progress note
 
-For Assignment 2, I revised the project boundary and turned the search idea into observable requirements. The supported input is now limited to event-focused English questions that name a disaster event, rather than arbitrary natural-language questions. I defined four functional requirements for question processing, searching the configured sources, combining source-labeled results, and continuing when one source is unavailable. I also added a correctness rule for source attribution and a proposed response-time target that will be measured later rather than treated as a result. For possible solutions, I am comparing a simple rule-based keyword/event-name approach with a lightweight named-entity approach using spaCy. I have not selected the final approach yet. My main unresolved issue is whether the simpler baseline is sufficient for the supported question set. The next step is a small feasibility check before Assignment 3.
+For Assignment 3, I selected the simple rule-based event-name approach for the six-week prototype and kept spaCy as a future option if the supported question set expands. I made this choice after a small feasibility experiment using twelve event-focused questions covering six known disaster events. The rule-based extractor identified the expected event in all twelve supported cases and correctly rejected three unsupported questions. I also revised the design to keep the project focused on one working search product rather than the full DISCAT 2.0 system. This version adds the system architecture, component responsibilities, a `search_event` interface, and the smallest implementation path. My main remaining risk is how closely simplified source adapters will represent real disaster archives. Next I will define the data records, failure behavior, and planned tests.
 
 ## Contents
 
@@ -27,6 +27,8 @@ For Assignment 2, I revised the project boundary and turned the search idea into
 - [10 Testing and verification](#10-testing-and-verification)
 - [11 Operation maintenance and future work](#11-operation-maintenance-and-future-work)
 - [12 Revision history and references](#12-revision-history-and-references)
+
+---
 
 ## 1 Problem research and scope
 
@@ -156,28 +158,26 @@ The following are outside the current six-week scope:
 
 **Figure 1.** The project focuses on one search path. A disaster researcher asks an event-focused question, the prototype searches a few independent sources, and the user receives combined results with source labels. One source may be unavailable while the others still return results.
 
+---
+
 ## 2 Requirements and system specification
 
-The requirements below describe the **proposed** behavior of the six-week prototype.
-
-They are not implementation results yet.
+The requirements below describe the proposed behavior of the six-week prototype.
 
 ### Initial requirements
 
 | ID | Required behavior and conditions | Acceptance check | Design and test reference |
 | :--- | :--- | :--- | :--- |
-| **F1** | When the user enters a supported event-focused English question that names one known disaster event, the system identifies the event to search. | Enter `What information is available about Hurricane Sandy?` and verify that the interpreted event is `Hurricane Sandy`. | Design and test references will be added as the project develops |
-| **F2** | After identifying the event, the system searches every configured source that is available for records matching that event. | Use controlled source data containing matching and nonmatching records and verify that each available source is queried for the identified event. | To be connected to later architecture and tests |
-| **F3** | The system combines matching records into one result list and shows the originating source for every displayed result. | Search for a seeded event with matches in more than one source and verify that the combined output contains the expected records and source labels. | To be connected to later data design and tests |
-| **F4** | If one configured source is unavailable, the system still returns results from the sources that responded and clearly identifies the unavailable source. | Make one controlled source unavailable and verify that available-source results are shown with an unavailable-source notice. | Selected adverse case for later design and testing |
-| **C1** | A displayed result must keep the correct source attribution. The system must not label a record as coming from a source that did not provide it, and must not present an unavailable source as successfully searched. | Seed each source with uniquely identifiable records, run a search, and compare every displayed source label and source status with the controlled input. | Correctness rule; later tests will reference C1 |
-| **Q1** | **Proposed target:** On the documented local prototype setup, at least 19 of 20 supported queries should produce a final displayed result or defined no-match outcome within **2 seconds** when all configured sources are available. | Run 20 supported queries under the documented local workload and measure elapsed time from submission to final displayed outcome. Count late or unanswered queries as misses. | Proposed and unmeasured; baseline measurement will be recorded later |
+| **F1** | When the user enters a supported event-focused English question that names one known disaster event, the system identifies the event to search. | Enter `What information is available about Hurricane Sandy?` and verify that the interpreted event is `Hurricane Sandy`. | Section 5: Query Interpreter and `search_event` |
+| **F2** | After identifying the event, the system searches every configured source that is available for records matching that event. | Use controlled source data containing matching and nonmatching records and verify that each available source is queried. | Section 5: Source Coordinator and Source Adapters |
+| **F3** | The system combines matching records into one result list and shows the originating source for every displayed result. | Search for an event with matches in more than one source and verify the expected records and source labels. | Section 5: Result Normalizer and Aggregator |
+| **F4** | If one configured source is unavailable, the system still returns results from sources that responded and clearly identifies the unavailable source. | Make one controlled source unavailable and verify that available results remain visible with an unavailable-source notice. | Section 5: Source-status handling |
+| **C1** | Every displayed result must keep its correct source attribution, and an unavailable source must not be shown as successfully searched. | Seed each source with uniquely identifiable records and compare displayed source labels and statuses with the controlled input. | Section 5: Result Normalizer and Aggregator |
+| **Q1** | **Proposed target:** At least 19 of 20 supported queries should produce a final displayed result or defined no-match outcome within **2 seconds** on the documented local setup when all configured sources are available. | Run 20 supported queries and measure elapsed time from submission to final displayed outcome. Late or unanswered queries count as misses. | Planned measurement in Section 10 |
 
-The two-second value in Q1 is an initial target for an interactive local prototype.
+The two-second value is still a **proposed target**.
 
-It is **not** an observed result.
-
-A later baseline measurement may justify revising it.
+It has not yet been measured for the complete end-to-end search path.
 
 ### Inputs and outputs
 
@@ -215,7 +215,7 @@ Results for Hurricane Sandy
   Source: Source B
 ```
 
-The Hurricane Katrina record should not appear because it does not match the requested event.
+The Hurricane Katrina record should not appear.
 
 #### Unsuccessful input example
 
@@ -225,19 +225,17 @@ The Hurricane Katrina record should not appear because it does not match the req
 What information is available?
 ```
 
-The input does not name a disaster event.
-
-The proposed result is a clear unsupported-input message such as:
+The proposed result is:
 
 ```text
 Please name a disaster event to search.
 ```
 
-The system should not invent an event or fabricate search results.
+The system should not invent a disaster event.
 
 #### Unavailable-source example
 
-For a supported question, if Source B cannot be reached, the proposed result is:
+If Source B cannot be reached:
 
 ```text
 Results from Source A
@@ -252,35 +250,31 @@ The system should not claim that Source B was searched successfully.
 
 | Assumption | Why it is needed now | Planned check |
 | :--- | :--- | :--- |
-| Supported questions are in English and name one disaster event | Keeps the question-processing problem bounded | Define a small supported query set and check how each approach interprets it |
-| The prototype uses two or three sources with structured metadata | Keeps the search path manageable for one student | Create or obtain small source fixtures before implementation depends on them |
-| Each returned record can retain a source identifier | Needed for correctness rule C1 | Seed unique source IDs and verify them in combined output |
-| Public or synthetic data is sufficient for the prototype | Avoids private or sensitive disaster information | Record the exact data used before Assignment 5 |
+| Supported questions are in English and name one disaster event | Keeps question interpretation bounded | Test a controlled set of supported questions |
+| The prototype uses two or three sources with structured metadata | Keeps the search path manageable | Build small controlled source fixtures |
+| Each result can retain a source identifier | Supports C1 | Seed unique source IDs and inspect combined output |
+| Public or synthetic data is sufficient | Avoids private or sensitive information | Record the exact data used before Assignment 5 |
 
 ### Constraints
 
-- The six-week prototype must be small enough to design and implement on the available development computer.
-- The first version supports only a limited event-focused question set, not arbitrary question answering.
-- The initial data sources may be simplified local data or small public sources rather than production disaster archives.
-- The project will not require private or sensitive disaster data.
-- The project must keep source attribution visible when results from multiple sources are combined.
-- Numerical quality targets remain proposed until actual measurements are recorded.
+- The prototype must run on the available development computer.
+- The first version supports a limited named-event question set.
+- Initial sources may be simplified local data or small public sources.
+- Private disaster data is not required.
+- Source attribution must remain visible.
+- Quality targets remain proposed until actually measured.
+
+---
 
 ## 3 Alternatives and selected solution
 
-Assignment 2 compares two approaches for the **question-processing** part of the same search path.
+Assignment 2 compared two approaches for interpreting a supported user question.
 
-**No final choice is made yet.**
+### Approach A — Rule-based event-name extraction
 
-The selected approach will be justified in Assignment 3 after a small feasibility check.
+The baseline uses a small list of supported disaster events and simple text normalization and matching.
 
-### Approach A — Simple rule-based event-name / keyword extraction
-
-This is the simple baseline.
-
-The baseline uses a small supported event list plus simple text normalization or matching rules.
-
-For example:
+Example:
 
 ```text
 Input:
@@ -289,116 +283,601 @@ Input:
 Known event:
 "Hurricane Sandy"
 
-Extracted search event:
+Extracted event:
 "Hurricane Sandy"
 ```
 
-The search layer would then use the extracted event name against the configured source metadata.
-
 **Strengths**
 
-- simple to understand and implement,
-- easy to inspect when a query fails,
-- little processing overhead,
-- fits the deliberately small six-week question set.
+- simple to understand,
+- simple to test,
+- easy to debug,
+- low processing overhead,
+- directly fits the limited six-week input set.
 
 **Limitations**
 
-- depends heavily on supported event names and wording rules,
-- may fail on abbreviations, spelling variations, or more flexible questions,
-- does not provide broader language understanding.
+- only recognizes configured events,
+- may fail with misspellings,
+- may fail when users use unexpected names or aliases,
+- does not provide general language understanding.
 
-### Approach B — Lightweight named-entity extraction with spaCy
+### Approach B — spaCy named-entity processing
 
-The second approach uses an existing natural-language-processing library such as **spaCy** to examine the question and identify named entities that may help determine the disaster event.
+The second approach uses the spaCy natural-language-processing library and a trained English model to identify named information inside a question.
 
-spaCy provides trained language-processing components that can identify information in text.
-
-https://spacy.io/usage/linguistic-features
-
-The extracted event information would still be sent to the same source-search and result-combination path.
+https://spacy.io/models/en/
 
 **Strengths**
 
-- can support more flexible wording than a fixed template,
-- reuses an existing language-processing library,
-- may support later expansion to locations, dates, and other question details.
+- supports more flexible language processing,
+- may help with future questions involving locations, dates, or other entities,
+- uses existing trained components.
 
 **Limitations**
 
-- adds a model and dependency to the prototype,
-- predictions may be incorrect,
-- disaster event names may still require extra matching rules,
-- may add more complexity than the narrow six-week input set needs.
+- requires another dependency and trained model,
+- statistical predictions can be incorrect,
+- disaster event names may still need project-specific rules,
+- adds complexity beyond the current small question set.
 
-### Comparison against the same requirements
+### Comparison
 
-| Requirement or constraint | Approach A: rule-based baseline | Approach B: spaCy entity extraction |
+| Criterion | Rule-based baseline | spaCy approach |
 | :--- | :--- | :--- |
-| **F1 — identify the event in a supported question** | Direct candidate for known event names and bounded wording; easy to verify | Candidate for more varied wording, but extraction is model-dependent |
-| **F2 — search configured sources** | Uses the same source-search path after event extraction | Uses the same source-search path after event extraction |
-| **F3 — combine and label results** | Uses the same common result format | Uses the same common result format |
-| **F4 — continue when one source is unavailable** | Can use the same unavailable-source handling | Can use the same unavailable-source handling |
-| **C1 — preserve correct source attribution** | Independent of parsing method; source IDs must be preserved | Independent of parsing method; source IDs must be preserved |
-| **Q1 — proposed local response-time target** | Expected to have low processing overhead; not yet measured | Adds model loading and processing overhead; not yet measured |
-| **Six-week implementation constraint** | Lower complexity | Higher complexity and an additional dependency |
-| **Future question flexibility** | Limited | Potentially better, but needs evidence from the supported query set |
+| Supports bounded named-event questions | Yes for configured events | Candidate |
+| Easy to understand and debug | High | Moderate |
+| Additional trained model required | No | Yes |
+| Implementation complexity | Low | Higher |
+| Future language flexibility | Limited | Higher potential |
+| Fit for current six-week scope | Strong | Possible, but more complex |
+| Current project evidence | 12/12 supported questions passed | No demonstrated improvement yet |
 
-### Current status
+### Selected solution
 
-No approach is selected yet.
+For the six-week prototype, I am selecting **Approach A: rule-based event-name extraction**.
 
-The Assignment 3 decision will use the requirements above and a small feasibility check.
+The main reason is that the current project deliberately supports a small input set where the user names a known disaster event.
 
-The main question is whether the rule-based baseline already handles the bounded event-focused questions well enough, or whether the NLP approach provides a useful improvement without unnecessary complexity.
+My local feasibility experiment showed that this approach correctly identified all **12 supported test questions** and correctly rejected all **3 unsupported questions**.
+
+The result does not mean that rule-based matching is the best approach for every natural-language search system.
+
+It means it is sufficient for the current bounded prototype.
+
+spaCy will remain a reconsideration option if the supported input expands.
+
+### Decision 1 — How should the prototype interpret the question?
+
+**Context and requirement:**  
+F1 requires the system to identify a known disaster event from a supported English question.
+
+**Options:**
+
+1. Rule-based matching against a known event list.
+2. spaCy named-entity processing.
+
+**Decision and reason:**  
+Use rule-based matching for the six-week prototype.
+
+It handled the complete controlled supported-question set in the feasibility experiment and requires less complexity.
+
+**Consequences:**  
+The system will be easier to understand and test, but it will not understand arbitrary questions, spelling errors, or events outside the configured list.
+
+**Status and reconsideration condition:**  
+Accepted for the six-week prototype.
+
+Reconsider the decision if realistic questions fail because their wording cannot be handled by the rule-based approach.
+
+### Decision 2 — How should the application search the sources?
+
+**Context and requirement:**  
+F2, F3, and F4 require searching several independent sources, combining their results, and handling a source that becomes unavailable.
+
+**Options:**
+
+1. Query each configured source through a separate adapter during the search.
+2. Copy all source metadata into one central local catalog first.
+
+**Decision and reason:**  
+Use separate source adapters and search the configured sources as part of the user request.
+
+This more directly represents the A08 problem of discovery across independent repositories.
+
+It also allows the prototype to visibly demonstrate the unavailable-source behavior required by F4.
+
+**Consequences:**  
+The application must handle different source formats and partial failure.
+
+A search may return incomplete information if one source is unavailable.
+
+**Status and reconsideration condition:**  
+Accepted for the initial prototype.
+
+A central harvested catalog may be reconsidered if later source latency, rate limits, or outages make direct searching impractical.
+
+---
 
 ## 4 Architectural design
 
-**Work to come in Assignment 3.**
+### Boundary and outside participants
 
-This section will show the system boundary, main running parts, communication, dependencies, and what is built, reused, or simulated.
+The primary outside participant is the **disaster researcher**.
+
+The researcher interacts with a simple web search interface.
+
+The search application communicates with two or three configured disaster-data sources.
+
+For the first working version, those sources may be represented by small local JSON datasets or source-adapter modules.
+
+The prototype controls the search application but does not control real external disaster archives.
+
+### System context view
+
+```mermaid
+flowchart LR
+    U[Disaster Researcher]
+    S[Plain-Language Disaster Search Prototype]
+
+    A[Disaster Source A]
+    B[Disaster Source B]
+    C[Disaster Source C]
+
+    U -->|Event-focused question| S
+
+    S -->|Search request| A
+    S -->|Search request| B
+    S -->|Search request| C
+
+    A -->|Records or unavailable status| S
+    B -->|Records or unavailable status| S
+    C -->|Records or unavailable status| S
+
+    S -->|Combined results and source status| U
+```
+
+**Figure 2.** The researcher submits one question to the prototype. The prototype searches several independent sources and returns one combined response.
+
+### Main running parts
+
+```mermaid
+flowchart LR
+    UI[Web Search Interface]
+    H[Search Handler]
+    Q[Query Interpreter]
+    SC[Source Coordinator]
+
+    A[Source A Adapter]
+    B[Source B Adapter]
+    C[Source C Adapter]
+
+    N[Result Normalizer and Aggregator]
+
+    CFG[(Known Events and Source Configuration)]
+
+    DA[(Source A Data)]
+    DB[(Source B Data)]
+    DC[(Source C Data)]
+
+    UI -->|Question| H
+    H --> Q
+    Q -->|Read known events| CFG
+    Q -->|Event name| SC
+
+    SC --> A
+    SC --> B
+    SC --> C
+
+    A --> DA
+    B --> DB
+    C --> DC
+
+    A -->|Records or status| N
+    B -->|Records or status| N
+    C -->|Records or status| N
+
+    N -->|Combined response| H
+    H -->|Results and status| UI
+```
+
+**Figure 3.** The search handler coordinates question interpretation, source searching, and result aggregation.
+
+### Responsibilities and communication
+
+The **Web Search Interface** accepts the researcher's question and displays the final result.
+
+The **Search Handler** coordinates the complete search operation.
+
+The **Query Interpreter** performs the selected rule-based event-name extraction required by F1.
+
+The **Source Coordinator** sends the interpreted event to each configured source adapter.
+
+Each **Source Adapter** hides the format or access details of one source.
+
+The **Result Normalizer and Aggregator** converts source records into a common format, preserves the source identifier, combines the records, and records whether each source responded successfully.
+
+### Saved state
+
+The first prototype will not permanently save user search history.
+
+The small amount of saved configuration includes:
+
+- supported disaster-event names,
+- configured source identifiers,
+- simplified source data used by the prototype.
+
+This information may initially be stored in local JSON or configuration files.
+
+Search results and source statuses only need to exist for the current request.
+
+### Where the parts run
+
+For the six-week prototype, the browser interface and search service can run on the same development computer.
+
+The search service will use Python.
+
+The first source adapters may read controlled local data on the same computer.
+
+Although the development environment is local, the adapter boundaries represent the separate sources that could later be external systems.
+
+### What I build, reuse, or simulate
+
+**Build:**
+
+- search interface,
+- rule-based query interpreter,
+- search handler,
+- source coordinator,
+- source adapters,
+- result normalization,
+- result aggregation,
+- unavailable-source behavior.
+
+**Reuse:**
+
+- Python,
+- standard web and data-processing libraries,
+- documented JSON data format.
+
+**Simulate:**
+
+- the first independent disaster-data sources using controlled local source data.
+
+The simulated source data allows the search coordination and failure behavior to be tested.
+
+It does not prove the behavior of real production disaster archives.
+
+---
 
 ## 5 Component design and interfaces
 
-**Work to come in Assignment 3.**
+### Component responsibilities
 
-This section will define component responsibilities and the interface contract for the critical search operation.
+| Component | Responsibility | Input | Output or state change |
+| :--- | :--- | :--- | :--- |
+| Web Search Interface | Accept the researcher's question and display the outcome | User-entered text | Search request and rendered result |
+| Search Handler | Coordinate one complete search | Question string | Final search response |
+| Query Interpreter | Identify a supported disaster event | Question string and known-event configuration | Event name or `unsupported_input` |
+| Source Coordinator | Ask each configured source adapter to search | Event name | Source responses |
+| Source Adapter | Search one source while preserving source identity | Event name | Matching records or unavailable status |
+| Result Normalizer and Aggregator | Convert and combine source records | Records and statuses | Combined results and source-status list |
+| Configuration | Store supported events and source identifiers | Configuration files | Read-only configuration |
+
+### Critical operation — `search_event`
+
+**Linked requirements:** F1, F2, F3, F4, and C1.
+
+**Purpose:**  
+Accept one supported event-focused question and produce one combined, source-labeled response.
+
+### Input
+
+```json
+{
+  "query": "What information is available about Hurricane Sandy?"
+}
+```
+
+The `query` must be a non-empty English string.
+
+For the six-week prototype, it must contain one supported disaster event.
+
+### Successful output
+
+```json
+{
+  "event": "Hurricane Sandy",
+  "results": [
+    {
+      "title": "Hurricane Sandy Event Summary",
+      "source_id": "source-a"
+    },
+    {
+      "title": "Hurricane Sandy Research Report",
+      "source_id": "source-b"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-a",
+      "status": "available"
+    },
+    {
+      "source_id": "source-b",
+      "status": "available"
+    },
+    {
+      "source_id": "source-c",
+      "status": "available"
+    }
+  ]
+}
+```
+
+### Partial-success output
+
+If Source B is unavailable:
+
+```json
+{
+  "event": "Hurricane Sandy",
+  "results": [
+    {
+      "title": "Hurricane Sandy Event Summary",
+      "source_id": "source-a"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-a",
+      "status": "available"
+    },
+    {
+      "source_id": "source-b",
+      "status": "unavailable"
+    },
+    {
+      "source_id": "source-c",
+      "status": "available"
+    }
+  ]
+}
+```
+
+This satisfies F4 because the available results are returned while the unavailable source remains visible.
+
+### Errors and defined outcomes
+
+| Condition | Result | Caller action |
+| :--- | :--- | :--- |
+| Empty question | `invalid_input` | Ask the user to enter a question |
+| No supported event found | `unsupported_input` | Ask the user to name a supported event |
+| Valid event but no matching records | `no_results` | Tell the user no matching records were found |
+| One source unavailable | Partial result with unavailable-source status | Display available results and warning |
+| All configured sources unavailable | `search_unavailable` | Tell the user that source results could not currently be obtained |
+
+### State changes
+
+The initial search operation is read-only.
+
+It does not modify the disaster records or permanently save the user's question.
+
+Temporary result and source-status information exists only while preparing the response.
+
+### Repeated calls
+
+If the controlled source data has not changed, repeating the same supported question should produce the same normalized results and source labels.
+
+The prototype does not claim that real external sources will always return identical results over time.
+
+### Successful example
+
+**Input**
+
+```text
+What information is available about Hurricane Sandy?
+```
+
+**Expected result**
+
+```text
+Hurricane Sandy identified.
+
+Matching records returned from the configured available sources.
+
+Each record includes its correct source label.
+```
+
+### Unsuccessful example
+
+**Input**
+
+```text
+What information is available?
+```
+
+**Expected result**
+
+```text
+unsupported_input:
+Please name a disaster event to search.
+```
+
+### Details still being worked out
+
+The exact normalized record fields beyond `title` and `source_id` will be completed in Section 6.
+
+The exact timeout and source-unavailable detection rules will be completed in Section 8.
+
+The exact real disaster-data sources for Semester II are also still being investigated.
+
+---
 
 ## 6 Data structure design
 
 **Work to come in Assignment 4.**
 
-This section will define the records, fields, relationships, ownership, persistence, and data rules.
+This section will define the records, fields, sample values, relationships, persistence, ownership, and data rules.
+
+---
 
 ## 7 Algorithm design and execution
 
 **Work to come in Assignment 4.**
 
-This section will provide pseudocode and normal, interrupted, and overlapping execution behavior for the critical operation.
+This section will provide pseudocode for `search_event` and describe the normal, interrupted, and overlapping execution cases.
+
+---
 
 ## 8 Failures and security
 
 **Work to come in Assignment 4.**
 
-This section will describe relevant adverse scenarios, misuse cases, expected behavior, and planned checks.
+This section will describe at least three relevant adverse cases, misuse cases, surviving state, recovery behavior, and planned checks.
+
+---
 
 ## 9 Implementation and feasibility
 
-**Work to come beginning in Assignment 3.**
+### Minimal implementation path
 
-The first feasibility check will compare the two question-processing approaches on the same small supported query set before the final design choice.
+The smallest useful end-to-end implementation will do the following:
+
+1. A researcher opens a simple local web search page.
+2. The researcher enters an event-focused question.
+3. The Query Interpreter identifies a known disaster event.
+4. The Source Coordinator sends that event to two or three source adapters.
+5. Each adapter searches a small controlled source dataset.
+6. The Result Normalizer and Aggregator combines matching records.
+7. The web interface displays the records with source labels.
+8. One source can be deliberately configured as unavailable to demonstrate F4.
+
+This is enough to demonstrate the main user-visible search path without attempting to reproduce the full DISCAT 2.0 system.
+
+### Feasibility experiment
+
+#### Question
+
+Can a simple rule-based event-name extractor satisfy F1 for the deliberately bounded question set, or is a more complicated language-processing approach immediately necessary?
+
+#### Procedure
+
+I configured six known disaster events:
+
+```text
+Hurricane Sandy
+Hurricane Katrina
+Hurricane Harvey
+Hurricane Ian
+Camp Fire
+Northridge earthquake
+```
+
+I created two supported question variations for each event.
+
+This produced twelve supported questions.
+
+Examples included:
+
+```text
+What information is available about Hurricane Sandy?
+
+Show me records for Hurricane Harvey.
+
+I need reports about the Camp Fire.
+
+What studies mention the Northridge earthquake?
+```
+
+The rule-based extractor:
+
+1. converts the question to lowercase,
+2. normalizes extra spaces,
+3. checks whether a configured event name appears in the question,
+4. returns the matching configured event name,
+5. returns no event when no configured event is found.
+
+I also tested three unsupported questions:
+
+```text
+What information is available?
+
+Show me disaster reports.
+
+Find information about storms.
+```
+
+### Actual evidence
+
+I ran the feasibility experiment in my local development environment.
+
+The output was:
+
+| Check | Actual result |
+| :--- | :--- |
+| Supported questions tested | 12 |
+| Correct supported identifications | 12 |
+| Incorrect supported identifications | 0 |
+| Unsupported questions tested | 3 |
+| Unsupported questions correctly rejected | 3 |
+| Unsupported questions incorrectly assigned an event | 0 |
+
+The experiment produced:
+
+> **Supported questions correct: 12/12**
+
+> **Unsupported questions correctly rejected: 3/3**
+
+Raw evidence:
+
+[Rule-based feasibility test output](evidence/feasibility-rule-based.txt)
+
+The script used for the experiment is:
+
+[`feasibility_rule_based.py`](feasibility_rule_based.py)
+
+### Finding
+
+For the deliberately bounded six-week input set, the simple rule-based method is feasible.
+
+It handled all controlled supported questions and did not invent an event for the unsupported questions.
+
+This experiment does **not** show that the method works for arbitrary natural language, spelling errors, unknown disasters, or every realistic researcher question.
+
+### Resulting design decision
+
+Use the rule-based event-name extractor for the six-week prototype.
+
+Keep spaCy as a reconsideration option if later supported questions show an important limitation in the simpler approach.
+
+### Relationship to Q1
+
+This feasibility experiment does **not** establish Q1.
+
+It tests only event extraction.
+
+Q1 measures the complete search operation, including source searching and result aggregation.
+
+That measurement will occur after the working end-to-end path exists.
+
+---
 
 ## 10 Testing and verification
 
 **Work to come beginning in Assignment 4.**
 
-This section will connect test IDs to requirements and later distinguish expected results from actual observations.
+This section will connect test IDs to the requirements and define normal, correctness, and adverse test cases before reporting actual end-to-end results.
+
+---
 
 ## 11 Operation maintenance and future work
 
 **Work to come beginning in Assignment 4.**
 
-This section will cover startup, diagnosis, recovery, risks, maintenance, and the Semester II continuation plan.
+This section will cover startup, diagnosis, recovery, risks, maintenance, and Semester II milestones.
+
+---
 
 ## 12 Revision history and references
 
@@ -406,23 +885,32 @@ This section will cover startup, diagnosis, recovery, risks, maintenance, and th
 
 | Revision date | Change to my design | Reason and evidence |
 | :--- | :--- | :--- |
-| November 5, 2026 | Created the Assignment 1 design foundation and narrowed the project to one event-focused plain-language search path | The course handbook requires one bounded six-week contribution rather than reproducing the full funded project |
-| November 5, 2026 | Kept unavailable-source behavior as the selected adverse case instead of making it the entire project | The product goal is disaster-data discovery; unavailable-source handling is one important condition within that product |
-| November 13, 2026 | Limited supported input more explicitly to English event-focused questions that name one disaster event | Makes the system boundary and F1 acceptance check concrete |
-| November 13, 2026 | Added F1–F4, C1, proposed Q1, examples, assumptions, and constraints | Assignment 2 requires observable behavior and concrete acceptance checks |
-| November 13, 2026 | Added a comparison between a rule-based baseline and spaCy-based entity extraction | Assignment 2 requires at least two approaches compared against the same needs; final selection is deferred to Assignment 3 |
+| November 5, 2026 | Created the Assignment 1 design foundation | Established the user problem and bounded contribution |
+| November 13, 2026 | Added F1–F4, C1, Q1, input/output examples, assumptions, constraints, and two candidate approaches | Assignment 2 required observable requirements and a fair comparison |
+| November 22, 2026 | Selected rule-based event-name extraction for the six-week prototype | My local feasibility experiment produced 12/12 correct supported identifications and 3/3 correct unsupported rejections |
+| November 22, 2026 | Added separate source adapters and a common normalization/aggregation component | Supports F2–F4 while keeping source attribution required by C1 |
+| November 22, 2026 | Added context and architecture diagrams, component responsibilities, the `search_event` interface, and the minimal implementation path | Assignment 3 requires the selected solution to be understandable enough to trace one request through the system |
+
+### Feedback response record
+
+| Prior feedback | Design response | Remaining issue |
+| :--- | :--- | :--- |
+| The project should build a product rather than make testing or simulation the main deliverable | The main deliverable is now a user-facing disaster search product. Experiments are used only to answer design questions | The initial source adapters still use simplified source data |
+| The project needed to be more specific within A08 | The current scope is one primary user, one named-event question type, two or three sources, one combined result format, and one unavailable-source case | Semester II may expand the question set and source integrations only after the small path works |
 
 ### Open question
 
 | Open question | Why it matters | Next action |
 | :--- | :--- | :--- |
-| Does the rule-based baseline interpret the supported event-focused question set reliably enough, or does spaCy provide a useful improvement? | The answer affects complexity, dependencies, and the design selected for the critical search path | Use the same small query set for a feasibility check before making the Assignment 3 decision |
+| How closely will the simplified source adapters match real disaster-data archives? | Local source fixtures can demonstrate coordination, but real archives may have different metadata formats, APIs, delays, and failure behavior | Research and select a realistic source format before finalizing Section 6 and Semester II integration |
 
 ### Assistance and reuse
 
-The design is based on the course design template and handbook, NSF Project 10, the W3C DCAT specification, and spaCy documentation.
+The design is based on the course design template and handbook, NSF Project 10, W3C DCAT Version 3, and spaCy documentation.
 
-AI assistance was used to help organize and draft revisions to this Markdown document.
+AI assistance was used to help organize the design, draft architecture and interface examples, and prepare the feasibility-test script.
+
+I ran the feasibility experiment in my own development environment and recorded the actual output in the `evidence` folder.
 
 The author is responsible for reviewing, revising, understanding, and presenting all submitted content according to course policy.
 
@@ -431,43 +919,60 @@ The author is responsible for reviewing, revising, understanding, and presenting
 1. **National Science Foundation.**  
    *Category III: AI-Driven National Synthesis Hub for Convergent Disaster Research and Intelligence.*  
    NSF Award 2609535.  
+   Award period: August 1, 2026–July 31, 2028.  
    https://www.nsf.gov/awardsearch/show-award?AWD_ID=2609535
 
-   **Supports:** the larger disaster-archive problem, plain-language questioning, and federated data layer that motivate this project.
+   **Supports:** the larger DISCAT 2.0 goal of connecting disaster archives, enabling plain-language questions, and using a federated data layer.
 
 2. **World Wide Web Consortium (W3C).**  
-   *Data Catalog Vocabulary (DCAT) Version 3.*  
+   *Data Catalog Vocabulary (DCAT) — Version 3.*  
+   W3C Recommendation, August 22, 2024.  
    https://www.w3.org/TR/vocab-dcat-3/
 
-   **Supports:** the use of common metadata to improve interoperability and discovery across catalogs.
+   **Supports:** common metadata descriptions, aggregation, interoperability, and discovery across catalogs.
 
-3. **spaCy.**  
-   *Linguistic Features.*  
+3. **Explosion AI.**  
+   *spaCy: English Trained Pipelines.*  
+   https://spacy.io/models/en/
+
+   **Supports:** the alternative use of a trained English natural-language-processing model.
+
+4. **Explosion AI.**  
+   *spaCy Usage Documentation — Linguistic Features and Named Entity Recognition.*  
    https://spacy.io/usage/linguistic-features
 
-   **Supports:** the candidate use of language-processing components for interpreting more flexible question wording.
+   **Supports:** the candidate use of statistical named-entity processing and helps explain why the more complex approach may require additional project-specific handling.
 
-4. **CSC 59866 course materials.**  
-   *Software Project Design Handbook, Design Checkpoints, and Design Document Template, Fall 2026.*
+5. **CSC 59866 course materials.**  
+   *Software Project Design Handbook, Design Checkpoints, and Design Document Template.*  
+   Fall 2026.
 
-   **Supports:** the weekly design process, requirement structure, acceptance checks, comparison method, and distinction between proposed targets and measured results.
+   **Supports:** the project-design process, architecture, component/interface specification, decision records, feasibility experiments, and weekly submission structure.
 
 ### Supporting media and evidence
 
-- [Workflow/context image](assets/workflow.png) — Figure 1 from Assignment 1.
-- No measured performance result is claimed yet.
-- Q1 is a **proposed** quality target and will remain labeled that way until it is measured.
-- The approach comparison is a design comparison, not a completed feasibility result.
+- [Workflow/context image](assets/workflow.png) — Assignment 1 context figure.
+- [Rule-based feasibility test output](evidence/feasibility-rule-based.txt) — actual Design 3 experiment output.
+- [`feasibility_rule_based.py`](feasibility_rule_based.py) — script used to perform the feasibility experiment.
+- Mermaid context and architecture diagrams are embedded directly in this document.
+- Q1 remains a **proposed** end-to-end quality target and has not yet been measured.
 
 ### Current document check
 
-- [x] Section 1 is revised and remains consistent with the bounded project.
-- [x] Four functional requirements have stable IDs and acceptance checks.
-- [x] At least one correctness rule is included.
-- [x] One measurable quality target is included and labeled proposed.
-- [x] Ordinary, unsuccessful, and unavailable-source examples are included.
-- [x] Assumptions and constraints are stated.
-- [x] Two approaches are compared against the same requirements.
-- [x] The final approach is not selected early.
-- [x] At least two relevant project sources are explained.
-- [x] The progress note and references are updated.
+- [x] Section 3 contains a justified selected solution.
+- [x] Two decision records include context, options, choice, reasons, consequences, and reconsideration conditions.
+- [x] Section 4 contains a system context view and a main-parts architecture view.
+- [x] Responsibilities and communication are explained.
+- [x] Saved state is identified.
+- [x] Where components run is explained.
+- [x] Built, reused, and simulated parts are distinguished.
+- [x] Section 5 contains a component responsibility table.
+- [x] `search_event` is linked to F1–F4 and C1.
+- [x] Inputs, outputs, state changes, errors, and examples are included.
+- [x] Section 9 contains the smallest useful implementation path.
+- [x] A feasibility experiment was actually run.
+- [x] Raw evidence is linked.
+- [x] The experiment resulted in a design decision.
+- [x] Prior feedback and resulting design revisions are recorded.
+- [x] The progress note is updated.
+- [x] Later sections remain clearly marked as future work.
