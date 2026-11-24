@@ -14,7 +14,7 @@ For this project, my scope will be narrowed to disasters that primarily affects 
 - Limited to disasters that primarily affect New York and related archives (floods)
 - Persona tailored responses
 - agent tiers
-- no live api's
+- no live api's from public documents 
 
 **Author:** Mohamed Kamagate  
 **Course:** CSC 59866  
@@ -257,9 +257,9 @@ Do not leave references to nonexistent images. -->
 * Semantic RAG (single pipeline)
 * Four tier agentic architecture
 
-**Decision and reason:** Out of the 3 options, I selected the RAG system. It's good at preventing hallucinations and provides source provenance. Works sufficiently well with semester time constraint in comparison to Four tier architecture. Works well with static database, no need for API calls. 
+**Decision and reason:** Out of the 3 options, I selected the RAG system. It's good at preventing hallucinations and provides source provenance. Works sufficiently well with semester time constraint in comparison to Four tier architecture. Works well with static database, no need for API calls(for public documents). 
 
-**Consequences:**  *Benefits*: (1) Doesn't rely on public API's that are subject to change. This way it's easier to test, verify and less likely to break the established pipeline. (2) Gives plain language answers traceable citations/sources. *Costs*: Low latency cost with retrieval being one step, however slower than keyword search. Does an extra step for each question (embed, search, call the LLM) with LLM causing most time. It can retrieve loosely related passages which affects C1 and Q2. Adds depencies compared to keyword search such as LLM, and an embedding model. 
+**Consequences:**  *Benefits*: (1) Doesn't rely on public API's that are subject to change. This way it's easier to test, verify and less likely to break the established pipeline. (2) Gives plain language answers traceable citations/sources. *Costs*: Slower than keyword-only search because each query embeds/searches the corpus and invokes an LLM (with the LLM step accounting for most of the latency, though expected to stay within the Q1 less-than-5-second target on a small static set. It can retrieve loosely related passages which affects C1 and Q2. Adds depencies compared to keyword search such as LLM, and an embedding model. 
 **Status and revisit condition:** Proposed. Feedback on this decsion or personal experiments may change the outcome.
 
 
@@ -290,8 +290,12 @@ Do not leave references to nonexistent images. -->
 * Prevent LLM from generating response if collection doesn't cover the query topic
 
 **Decision and reason:** It's a core required behavior to prevent out of scope questions. Letting a LLM be able to generate a response wihtout being backed up by factual information in static corpus, invites room for halluncination. This can negatively impact a user in need. 
-**Consequences:** Replace.  
-**Status and revisit condition:** Replace.
+
+
+**Consequences:** .  
+
+
+**Status and revisit condition:** .
 
 ### Context view:
 
