@@ -238,15 +238,6 @@ Do not leave references to nonexistent images. -->
 **KeywordSearch existing methods**(Optional, WIP): 
 * rank-bm25. Works by giving passages as list of words, and it scores it against a query. Scores based on rarity and term frequency. The highest scores will be the passage retrieved and cited based on what the query asked Alternative is SQLite FTS5:
 
-**Semantic retrivial existing methods**(Optional, WIP): 
-* Query becomes vector, system measures how close that vector is to each passage vector 
-
-
-|  |Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
-|---|---|---|---|
-| Strengths | Zero chance for halluncinations | Prevents halluncionations and package response in plain language  | Prevents hallucinations and is useful for coordination. Can handle large scale archives and very scalable |
-|Weakness | Returns raw excerpts user must read and interpret | Static database | Difficult implementation |
-
 
 
 
@@ -283,7 +274,9 @@ Do not leave references to nonexistent images. -->
 
 
 **Decision and reason:** Flood related events. The reason being flood related events causes more conercerns and damage in terms of displacements, infrastructure damage, and may require extensive knowledge on recovery programs. There are more people who are able to avoid heeatwaves than flood related events as well. 
+
 **Consequences:** *Benefits*: It helps and reaches a wider range of people compared to just heatwaves. *Cost/Limitation*: Easier to manage compared to working with more than 1 natural disaster, but misses out on reaching people who are more vulnerable to heatwaves. 
+
 **Status and revisit condition:** Accepted. May change based on feedback
 
 
@@ -313,7 +306,11 @@ Do not leave references to nonexistent images. -->
 * Public documentation/sources. FEMA, New York Emergency Management, and Ny.gov.
 * External model: any LLM. Google genai possible candidate.
 * Retriever
-![Visual.](assets/RAGContextView.png)
+![Visual.](assets/RAGContextViewV2.png)
+
+**Figure 1: RAG Context View**: Retriever first to interact with query. The retriever gets a general understanding of the user query, uses this understanding to search the knowledge base for relevant documents. Based on retriever score, retrieves relevant documents that can be used to help answer the query. The retriever then augments the prompt with this information to give to the LLM. The LLM then synthesizes a response for the user, while being grounded in its response by the retriever.
+
+
 
 ### Running view (High level)
 1. **Query intake**: User submits a question
