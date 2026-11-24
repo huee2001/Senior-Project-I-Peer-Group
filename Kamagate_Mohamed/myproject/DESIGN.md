@@ -311,8 +311,9 @@ Do not leave references to nonexistent images. -->
 *External Systems*: 
 
 * Public documentation/sources. FEMA, New York Emergency Management, and Ny.gov.
-* External model: any LLM. Together.ai possible canidate.
-
+* External model: any LLM. Google genai possible candidate.
+* Retriever
+![Visual.](assets/RAGContextView.png)
 
 ### Running view (High level)
 1. **Query intake**: User submits a question
