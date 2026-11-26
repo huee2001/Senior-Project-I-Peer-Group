@@ -409,6 +409,11 @@ Do not leave references to nonexistent images. -->
 
 | Record or structure | Fields and example values | Relationships and rules | Persistence |
 |---|---|---|---|
+| Source document (one of the 10 corpus documents) | document_id, title, url, collection_date | Replace | What survives restart? |
+| Chunk (passage of document) | chunk_id, document_id,text | Replace | What survives restart? |
+| Retrieval result | question, chunks, chunk_id | Replace | What survives restart? |
+| Answer response | status, answer_text | Replace | What survives restart? |
+| Replace | Replace | Replace | What survives restart? |
 | Replace | Replace | Replace | What survives restart? |
 
 **Ownership:** Identify the authoritative place for important facts.
