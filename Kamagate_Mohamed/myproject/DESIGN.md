@@ -22,8 +22,8 @@ For this project, my scope will be narrowed to disasters that primarily affects 
 **Current assignment:** 1
 **Friday commit deadline:**  November 6 2026, at 11:59 p.m. New York time  
 **Monday presentation:**  November 9 2026, at 6:30 p.m. New York time  
-**Last updated:** 11/10 
-**Document status:** Proposed
+**Last updated:** November 26 2026 
+**Document status:** Revised
 
 
 ## Progress note
@@ -39,6 +39,10 @@ Narrowed down the approach for six week contribution; Will work with sources tha
 Modified required behavior. F2, previously requiring persona tailored response is no longer a requirement and is omitted for now or may be deferred to semester II. F2's new requirement is needing the response to be in plain language instead for one user. The one user in question would be the general public, specifically those who are living in NY and are affected by floods or are in flood prone zones and would like to prepare.
 
 Added more specific test questions that includes acceptable answers, the source passage you can find the answer, and whether or not it can be answered in section 2 
+
+
+*11/26*
+Completed test set of questions to test the effectiveness of the prototype. 
 
 ## Contents
 
@@ -176,6 +180,13 @@ Do not leave references to nonexistent images. -->
 | T4 | What’s the difference between a Flash Flood Watch and a Flash Flood Warning? | Yes | NY.gov and/or NYEM (https://www.nyc.gov/site/em/ready/flooding.page)  | A watch means conditions favor flash flooding but it isn’t certain or imminent. A warning means flash flooding is in progress, imminent, or highly likely. Anything along these lines. Also include source passage |
 | T5 | Can renters get flood insurance? | Yes | FEMA or floodhelpny(https://floodhelpny.org/en/understanding-flood-insurance) | Should expect a "Yes". The page says all homeowners, renters, and business owners are eligible for flood insurance|
 | T6 | What are some assistances I can get after experiencing hurricane Isaias | Not in scope. Hurricane Isais is in Florida | N/A | State limitations and the question being beyond scope.|
+| T7 | What preexisting medical conditions are at further risk during a post flood event?  | Yes | Ready.gov(https://www.ready.gov/floods ) | Any mention of asthma or lung conditions due to mold build up. Any mention of immune suppression. |
+| T8 | How do I prepare for a wildfire evacuation in California? | No. Wrong hazard. Prototype only covers floods in NY as of now | N/A | State that the system covers floods in New York, or just any general limitation. |
+| T9 | Is my street at risk of a flood tomorrow? | No. No real time information provided. System only covers static info. | N/A | State that the system doesnt have access to live data, or just state any general limitation. |
+| T10 | How to safely clean up mold after a flood event? | Yes | Ny Department of Health(https://healthweb-back.health.ny.gov/environmental/emergency/flood/mold_bacteria_cleaning.htm)   | Any mention of how to identify mold and how to safely get rid of it(various steps like drying methods mentioned on the site). |
+| T11 | How do I start a repair case if my landlord won't fix flood damage? | Yes | tenant rights( https://tenant-rights.com/new-york/flood-risk-and-tenant-rights-in-new-york) | File the Housing Court form for a repair proceeding (which is considered a HP action) and bring documentation of the damage and communications |
+| T12 | Is it risky to withhold rent if landlord doesn't do repairs after a flood related event? | Yes | tenant rights(https://tenant-rights.com/new-york/hurricane-sandy-flood-damage-rights-ny-renters) | It is specifically noted that it is risky to withhold rent in New York. System should mention this, and mention the recommended action which is to document and file complaint channels. |
+| T13 | 1 | 2 | 3 | 4 |
 
 **Inputs and outputs:** Give an ordinary example and an unsuccessful example.
 *Ordinary example*: Takes in user query as input, returns response to query as output. The response should have source provenance, and be tailored to the user's persona(may omit this part)
@@ -518,6 +529,7 @@ complete in Assignment 6. -->
 |---|---|---|
 | 11/10 | Scoping out inputs and outputs | Based on the proposed solution, this is the expected workflow |
 | 11/20 | Specified one user, being a general public user living in new York,  instead of the 3 stakeholders. Modified required behavior, specifically F2 as a result(Left out persona tailored responses).  Deferred four tier agentic architecture strictly for semester 2.  Added example test sets that can be used to test prototype. Specified example public documentation, and acceptable answers in test sets. | Based on grading feedback and assignment details| 
+| 11/26 | Completed test set for prototype testing. There are 10 distinct sources (note, some repeating organizations but different pages nonetheless). as well. | Expansion on grading feedback. Also, these test sets are good for determining the effectiveness of the prototype.
 
 | Open question | Why it matters | Next action |
 |---|---|---|
