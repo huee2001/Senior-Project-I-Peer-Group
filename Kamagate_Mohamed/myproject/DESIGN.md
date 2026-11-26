@@ -42,7 +42,9 @@ Added more specific test questions that includes acceptable answers, the source 
 
 
 *11/26*
-Completed test set of questions to test the effectiveness of the prototype. 
+Completed test set of questions to test the effectiveness of the prototype.
+
+Added 3 new open questions. 
 
 ## Contents
 
@@ -535,6 +537,10 @@ complete in Assignment 6. -->
 |---|---|---|
 | What is the best AI framework to handle the four tier architecture presented  | An AI framework provides standard patterns for agent communication, allowing one agent's structured JSON output to automatically trigger the next agent's input without custom glue code. | Start iteratively first before introducing the AI framework. Design a RAG system before making it more dynamic |
 | What are some additional questions I can add to the test set | Used to test prototype | Work backwards. Go through documentations again to pull out key, clear answers, generate possible questions as a result |
+| What algorithmic process should I follow to best implement the prototype?(I.e How does system gurantee that every answer traces to source passage, Best web scraping method for this context, etc.) | Essential to the direction of the project  | Investigate viable web scraping methods, understand deeper how a RAG system works  |
+| How will conflicting or outdated information across sources be resolved | A city page and a federal page may disagree, or a deadline may have passed. Early I mentioned different sources can "complement" each other or further elaborate, but conflicts are also likely to occur. | An assumption for now until I further investigate |
+| How should documents be chunked?(by section? fixed size? Total document included?) | Chunks that are too small lose context, and chunks that are too large add noise. | (Once prototype is set up) Can try two different chunk sizes for T1 up to T5. The two sizes are either large or small. If the group of small chunks show the expected passage in top 3 more often than the group with larger chunk, settle for that and vice versa | 
+
 
 **Assistance and reuse:** Attribute sources, code, data, diagrams, and assistance under course policy.
 
