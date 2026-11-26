@@ -310,6 +310,11 @@ Do not leave references to nonexistent images. -->
 
 **Status and revisit condition:** .
 
+
+
+
+## 4 Architectural design
+
 ### Context view:
 
 *System boundary*: Flood related events Q&A prototype
@@ -328,6 +333,14 @@ Do not leave references to nonexistent images. -->
 **Figure 1: RAG Context View**: Retriever first to interact with query. The retriever gets a general understanding of the user query, uses this understanding to search the knowledge base for relevant documents. Based on retriever score, retrieves relevant documents that can be used to help answer the query. The retriever then augments the prompt with this information to give to the LLM. The LLM then synthesizes a response for the user, while being grounded in its response by the retriever.
 
 
+**Boundary and outside participants:** Replace.
+
+**Main parts and messages:** Explain responsibilities and labeled arrows.
+
+**Where parts run:** Identify shared machines and dependencies.
+
+**What I build reuse or simulate:** Replace.
+
 
 ### Running view (High level)
 1. **Query intake**: User submits a question
@@ -335,6 +348,10 @@ Do not leave references to nonexistent images. -->
 3. **Application safeguard**: If top canidate is below score threshold, return fixed limitation message. Otherwise augment the prompt with the labeled chunks with IDs and sends to LLM
 4. **LLM synthesized response**: LLM returns a generated response in plain language
 5. **Static Corpus**: Holds the static corpus in chunks.
+
+## 5 Component design and interfaces
+
+<!-- Assignment 3. A component can be a function or module in one program. -->
 
 ## Component responsibility table
 | Component | Responsibility | Information it needs | Result it produces |
@@ -371,38 +388,6 @@ Do not leave references to nonexistent images. -->
 | LLM call times out or fails | Return the fixed message, "could not produce a verified answer"  |
 | Answer contains no citations | Reject the answer |
 |Answer cites a chunk_id not in the retrieved set | Reject the answer |
-
-
-
-
-## Smallest useful implementation path
-1. Load small initial batch (10 documents) of static corpus split into chunks  with their own chunk_id, title, url, collection date.
-2. Connect query handler with retriever + scoring. low-score queries return the fixed limitation message immediately without calling the LLM.
-3. For above-threshold queries, pass labeled chunks to the LLM, require chunk_id citations, and map IDs back to stored title, url, and collection_date in application code
-4. LLM generates response for user
-
-
-
-
-
-
-
-## 4 Architectural design
-
-<!-- Assignment 3. Show context and the main running programs and stores.
-Embed a diagram from assets and retain editable source. Mermaid is optional. -->
-
-**Boundary and outside participants:** Replace.
-
-**Main parts and messages:** Explain responsibilities and labeled arrows.
-
-**Where parts run:** Identify shared machines and dependencies.
-
-**What I build reuse or simulate:** Replace.
-
-## 5 Component design and interfaces
-
-<!-- Assignment 3. A component can be a function or module in one program. -->
 
 | Component | Responsibility | Input | Output or state change |
 |---|---|---|---|
@@ -469,6 +454,12 @@ ALGORITHM NAME(inputs)
 | Replace | Replace | Replace |
 
 ## 9 Implementation and feasibility
+
+## Smallest useful implementation path
+1. Load small initial batch (10 documents) of static corpus split into chunks  with their own chunk_id, title, url, collection date.
+2. Connect query handler with retriever + scoring. low-score queries return the fixed limitation message immediately without calling the LLM.
+3. For above-threshold queries, pass labeled chunks to the LLM, require chunk_id citations, and map IDs back to stored title, url, and collection_date in application code
+4. LLM generates response for user
 
 <!-- Begin the feasibility experiment and path in Assignment 3; refine in Assignment 4;
 report implementation status in Assignments 5â€“6. -->
