@@ -416,6 +416,40 @@ Do not leave references to nonexistent images. -->
 | Replace | Replace | Replace | What survives restart? |
 | Replace | Replace | Replace | What survives restart? |
 
+## Show example values
+**Source document**:
+```
+document_id: doc-03
+title: Programs and Assistance Approved for Hurricane Ida Survivors
+url: https://www.fema.gov/fact-sheet/programs-and-assistance-approved-hurricane-ida-survivors
+collection_date: 2026-11-19
+```
+
+**Chunk**:
+```
+chunk_id: doc-03-c007
+document_id: doc-03
+```
+**Question**:
+```
+question: "What housing help can I get after Ida?"
+chunks: [{chunk_id: "doc-03-c007", score: 0.82}
+```
+
+**Answer Response**: 
+```
+status: answered
+answer_text: "FEMA may help pay rent if the home was your primary residence. [doc-03-c007]"
+citations: [{chunk_id: "doc-03-c007", title: "Individuals and Households Program Fact Sheet - FEMA", url: "...", collection_date: "2026-11-19"}]
+
+//Note: on cilent side, response would look like
+//FEMA may help pay rent if the home was your primary residence.
+//Sources:
+//1. Individuals and Households Program Fact Sheet - FEMA
+//   https://www.fema.gov/sites/default/files/documents/fema_ia_individuals-households-program-fact-sheet_112024.pdf
+//   Collected: 2026-11-19
+```
+
 **Ownership:** Identify the authoritative place for important facts.
 
 **Invalid combinations:** Explain how they are prevented or detected.
