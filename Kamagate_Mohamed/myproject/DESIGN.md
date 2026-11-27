@@ -132,7 +132,7 @@ https://www.preventionweb.net/news/increasing-national-resilience-through-open-d
 Implement a RAG system. It'll be more static, the ai agent would query a vector database regarding flooding information in new york instead 
 
 **Six-week contribution(Revised 11/18)**
-For one New York flood event such as Hurricane Ida, the prototype retrieves relevant passages from a fixed collection of about 20 or so public documents from sources like FEMA.gov and NYC Emergency management. OpenFEMA, FloodNEt, and NYC Open data datasets are out of scope for this version since they require api calls. The prototype should be able to answer questions such as "What financial assistance was available after Ida, and what documents did it require?", and the result criteria would be every result/response to a query  provides a title, URL, and a collection date that links back to the source it retrieved the info from. For out of scope questions, the result criteria should be the system returns a response mentioning its limitations and provide no misleading text. 
+For one New York flood event such as Hurricane Ida, the prototype retrieves relevant passages from a fixed collection of about 10 or so public documents from sources like FEMA.gov and NYC Emergency management. OpenFEMA, FloodNEt, and NYC Open data datasets are out of scope for this version since they require api calls. The prototype should be able to answer questions such as "What financial assistance was available after Ida, and what documents did it require?", and the result criteria would be every result/response to a query  provides a title, URL, and a collection date that links back to the source it retrieved the info from. For out of scope questions, the result criteria should be the system returns a response mentioning its limitations and provide no misleading text. 
 
 *Boundary*: Only dealing with static retrieval over fixed collection. No live api calls, no agent tiers for this scope. 
 
@@ -409,8 +409,8 @@ Do not leave references to nonexistent images. -->
 
 | Record or structure | Fields and example values | Relationships and rules | Persistence |
 |---|---|---|---|
-| Source document (one of the 10 corpus documents) | document_id, title, url, collection_date | Replace | What survives restart? |
-| Chunk (passage of document) | chunk_id, document_id,text | Replace | What survives restart? |
+| Source document (one of the 10 corpus documents) | doc_id, title, url, collection_date | Replace | What survives restart? |
+| Chunk (passage of document) | chunk_id, doc_id,text | Replace | What survives restart? |
 | Retrieval result | question, chunks, chunk_id | Replace | What survives restart? |
 | Answer response | status, answer_text | Replace | What survives restart? |
 | Replace | Replace | Replace | What survives restart? |
@@ -419,28 +419,32 @@ Do not leave references to nonexistent images. -->
 ## Show example values
 **Source document**:
 ```
-document_id: doc-03
+
+document_id: fema-ida-programs-assistance
 title: Programs and Assistance Approved for Hurricane Ida Survivors
 url: https://www.fema.gov/fact-sheet/programs-and-assistance-approved-hurricane-ida-survivors
 collection_date: 2026-11-19
+
+//note: doc_id should follow protocol: <agency>-<topic> to avoid confusion
 ```
 
 **Chunk**:
 ```
-chunk_id: doc-03-c007
-document_id: doc-03
+
+chunk_id: fema-ida-programs-assistance-c02
+doc_id: fema-ida-programs-assistance
 ```
 **Question**:
 ```
-question: "What housing help can I get after Ida?"
-chunks: [{chunk_id: "doc-03-c007", score: 0.82}
+query: "What housing help can I get after Ida?"
+chunks: [{chunk_id: "fema-ida-programs-assistance-c02", score: 0.82}
 ```
 
 **Answer Response**: 
 ```
 status: answered
 answer_text: "FEMA may help pay rent if the home was your primary residence. [doc-03-c007]"
-citations: [{chunk_id: "doc-03-c007", title: "Individuals and Households Program Fact Sheet - FEMA", url: "...", collection_date: "2026-11-19"}]
+citations: [{chunk_id: "fema-ida-programs-assistance-c02", title: "Individuals and Households Program Fact Sheet - FEMA", url: "...", collection_date: "2026-11-19"}]
 
 //Note: on cilent side, response would look like
 //FEMA may help pay rent if the home was your primary residence.
@@ -452,9 +456,23 @@ citations: [{chunk_id: "doc-03-c007", title: "Individuals and Households Program
 
 **Ownership:** Identify the authoritative place for important facts.
 
+* **Source Provennance(doc_id, title, url, collection_date, metadata)**: owned by static corpus store. It should never get edited by other components who share this data such as the LLM. The LLM never writes titles, URLs, or dates, so it can't invent a source.
+* **Content**: Owned by the original agencies. Project only captures a snapshot of their content on the collection_date
+* **Chunk text & it's embeddings(For relevance scoring)**: owned by the static corpus store. The embeddings are derived from the chunk text, so the chunk text also has authority over the embeddings if the chunk text is in disagreement with the embeddings. (hierarchy: the static corpus store owns both. the chunk text has authority over its embedding) 
+* **LLM output/Query outcome**: Owned by query handler.
+
+Note: basing ownership on who gets the final say on specific piece of data, as different sources components may share the same type of data. (i.e. the original agency page and the corpus store both have a title and URL for a document
+
 **Invalid combinations:** Explain how they are prevented or detected.
 
+* Chunk where the doc_id associated doesn't exist. This is prevented at the collection and cleaning of data(corpus ingestion). During this phase I will ensure each chunk is associated with a doc id.
+* Top score below 0.4 but the LLM was called anyway. This is prevented by hardcoded application safeguard.
+* Duplicated chunk_id. This is prevented
+* Fabricated chunk IDs with response. This is detected during post LLM verification. The process would be if an LLM creates a claim, and cites a fabricated chunk id, nyem-flooding-c999, or cites a chunk id outside of current retrieved set, the code will check the ID against the top_k retrieved IDS. If there's a mismatch, the verification fails
 **Retention and deletion:** Explain how long data is needed and what deletion changes.
+* **Corpus and chunks**: kept for the whole semester and read-only while the prototype runs. If I plan to recollect a page(that may have been updated), I will simply add a new snapshot  with a new collection date, rather than overwrite what I currently have.
+* **Retrieved chunks and raw LLM answers**: Not saved and are lost on restart
+* **What deletion changes**: Deleting a document must also delete its chunks and embeddings(otherwise retrieval could return a chunk whose source no longer exists). 
 
 ## 7 Algorithm design and execution
 
@@ -464,6 +482,28 @@ that hides a guarantee, such as a protected write. -->
 ```text
 ALGORITHM NAME(inputs)
     replace with input checks
+    replace with decisions and state changes
+    replace with output and error behavior
+```
+
+```text
+draft
+AnswerQuery(user_query)
+#1 input check:
+ IF user_query is empty or only whitespace
+        RETURN "Please enter a question."        # no retrieval, no LLM call
+#2 Retriver
+query_vector = embed(normalize(user_query))
+candidates   = top TOP_K chunks from corpus store by similarity to query_vector
+                   (each with chunk_id and score)
+#3 Safeguard (F3): the only path to the LLM goes through this check
+ IF candidates is empty OR candidates[0].score < THRESHOLD
+        log(status = "out_of_scope")
+        RETURN fixed limitation message + suggested alternative source
+# 4. Augment and generate
+prompt = instructions + labeled chunks (chunk_id + text) + user_query
+             (instructions: answer in plain language, cite only the given chunk_ids)
+
     replace with decisions and state changes
     replace with output and error behavior
 ```
